@@ -1,25 +1,37 @@
 from django.db import models
-
-# Create your models here.
 from django.contrib.auth.models import User
 
 
+# Create your models here.
 class Sport(models.Model):
-    name = models.TextField(null=False)
-
-
-class Event(models.Model):
-    name = models.TextField(null=False)
-    sport = models.ForeingKey(Sport)
-    local = models.ForeingKey(Team)
-    visitor = models.ForeingKey(Team)
+    name = models.CharField(null=False, max_length=100)
+    def __unicode__(self):
+        return self.name
 
 
 class Team(models.Model):
-    name = models.TextField(null=False)
+    name = models.CharField(null=False, max_length=100)
     country = models.TextField()
+
+    def __unicode__(self):
+        return self.name
+
+
+class Event(models.Model):
+    name = models.CharField(null=False, max_length=100)
+    sport = models.ForeignKey(Sport)
+    team1 = models.ForeignKey(Team, null=True, related_name='local')
+    team2 = models.ForeignKey(Team, null=True, related_name='visitor')
+
+    def __unicode__(self):
+        return self.name
 
 
 class Bet(models.Model):
-    user = models.ForeingKey(User)
-    event = models.ForeingKey(Event)
+    quota = models.DecimalField(null=True, decimal_places=2, max_digits=5)
+    description = models.TextField(null=True)
+    user = models.ForeignKey(User)
+    event = models.ForeignKey(Event)
+
+    def __unicode__(self):
+        return self.event.name + " - " + str(self.user)
