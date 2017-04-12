@@ -1,0 +1,7 @@
+{
+   "jsonrpc": "2.0", 
+   "error": {
+      "message": "DSC-0008", 
+      "code": -32700
+   }
+}

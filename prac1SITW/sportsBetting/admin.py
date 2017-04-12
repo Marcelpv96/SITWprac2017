@@ -1,3 +1,7 @@
 from django.contrib import admin
+from sportsBetting.models import *
 
-# Register your models here.
+admin.site.register(Sport)
+admin.site.register(Event)
+admin.site.register(Team)
+admin.site.register(Bet)
