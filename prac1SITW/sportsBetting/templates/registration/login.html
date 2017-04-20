@@ -1,0 +1,26 @@
+{% load staticfiles %}
+
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'sportsBetting/login.css' %}"/>
+</head>
+<body>
+<div class="wrap">
+    <h2> SportsBetting Login </h2>
+    <form method="post" action="{% url 'login' %}">
+        <p>
+            <h3>{{ form.username.label_tag }}</h3>
+            {{ form.username }}
+        </p>
+        <p>
+            <h3>{{ form.password.label_tag }}</h3>
+            {{ form.password }}
+        </p>
+        <p><input type="hidden" name="next" value="{{ next }}"/></p>
+        <input type="submit" value="login" />
+        {% if form.errors %}
+            <h3 class="error">Your username and password didn't match. Please try again.</h3>
+        {% endif %}
+        {% csrf_token %}
+    </form>
+</div>
+</body>

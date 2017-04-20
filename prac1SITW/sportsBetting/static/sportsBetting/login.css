@@ -1,0 +1,25 @@
+h2, h3 {
+    font-family: sans-serif;
+}
+
+h2 {
+    font-size: 50px;
+}
+
+h3 {
+    margin-bottom: 2px;
+}
+
+.wrap {
+    background-color: rgb(129, 198, 144);
+    text-align: center;
+    margin: auto;
+    margin-top: 10%;
+    width: 35%;
+    height: 35%;
+    padding: 5% 5% 5% 5%;
+}
+
+.error {
+    color: rgb(236, 27, 27);
+}
