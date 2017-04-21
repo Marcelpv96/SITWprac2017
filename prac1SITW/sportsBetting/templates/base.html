@@ -13,7 +13,8 @@
                 <p>User: {{ user.username }} |
                 <a href="{% url 'logout' %}?next={{request.path}}">logout</a></p>
             {% else %}
-                <p><a href="{% url 'login' %}?next={{request.path}}">login</a></p>
+                <p><a href="{% url 'login' %}?next={{request.path}}">login</a>
+                <a href="/accounts/register">register</a></p>
             {% endif %}
         {% endblock %}
     </div>

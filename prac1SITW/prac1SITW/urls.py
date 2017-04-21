@@ -22,4 +22,8 @@ urlpatterns = [
     url(r'^$', homePage),
     url(r'^accounts/login/$', login, name='login'),
     url(r'^accounts/logout/$', logout, name='logout'),
+    # Registration URLs
+    url(r'^accounts/profile/$', profile),
+    url(r'^accounts/register/$', register),
+    url(r'^accounts/register/complete/$', registration_complete),
 ]
