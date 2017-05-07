@@ -5,13 +5,14 @@ from django.contrib.auth.models import User
 # Create your models here.
 class Sport(models.Model):
     name = models.CharField(null=False, max_length=100)
+
     def __unicode__(self):
         return self.name
 
 
 class Team(models.Model):
     name = models.CharField(null=False, max_length=100)
-    country = models.TextField()
+    crest = models.ImageField(upload_to="crests/")
 
     def __unicode__(self):
         return self.name
