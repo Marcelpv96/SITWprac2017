@@ -23,7 +23,8 @@ from sportsBetting.views import *
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', homePage, name='home'),
-    url(r'^accounts/', include('accounts.urls'))
+    url(r'^accounts/', include('accounts.urls')),
+    url(r'^teams/list_teams/', list_teams, name="list_teams")
 ]
 
 if settings.DEBUG:

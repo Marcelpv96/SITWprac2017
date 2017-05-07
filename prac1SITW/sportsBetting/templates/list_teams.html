@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <table class="table table-striped	">
+        {% for team in teams %}
+            <tr>
+                <td class="text-center">{{ team.name }}</td>
+                {% if team.crest %}
+                    <td class="center-block">
+                        <img src="{{ team.crest.url }}" width="100px" height="100px" >
+
+                    </td>
+                {% endif %}
+
+            </tr>
+        {% endfor %}
+    </table>
+
+
+{% endblock %}
