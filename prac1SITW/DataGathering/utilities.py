@@ -23,7 +23,7 @@ def save_image_from_url(field, url):
         img_temp.write(r.content)
         img_temp.flush()
 
-        img_filename = urlparse.urlsplit(url).path[1:]
+        img_filename = urlparse.urlsplit(url).path.split('/')[-1]
 
         field.save(img_filename, File(img_temp), save=True)
 

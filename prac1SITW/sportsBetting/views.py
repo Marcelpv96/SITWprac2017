@@ -20,7 +20,13 @@ def homePage(request):
 
 
 def list_teams(request):
-    teams_list = sorted(Team.objects.all(), key=lambda x: x.name)
+    teams_list = Team.objects.all().order_by('name')
+
+    if request.method == 'GET':
+        search_query = request.GET.get('search_box', default=None)
+        if search_query:
+            teams_list = Team.objects.filter(name__contains=search_query).order_by('name')
+
     paginator = Paginator(teams_list, 20)
 
     page = request.GET.get('page')
@@ -31,4 +37,4 @@ def list_teams(request):
     except EmptyPage:
         teams = paginator.page(paginator.num_pages)
 
-    return render(request, 'list_teams.html', {'teams': teams} )
+    return render(request, 'list_teams.html', {'teams': teams, 'query': search_query})
