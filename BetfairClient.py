@@ -40,7 +40,7 @@ def getMarketCatalouge(eventId):
         endPoint = 'https://api.betfair.com/exchange/betting/rest/v1.0/listMarketCatalogue/'
         now = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
         market_catalouge_req = '{"filter":{"eventIds":["' + str(eventId) + '"], "marketCountries":["GB"],'\
-                                    '"marketStartTime":{"from":"' + now + '"}},"maxResults":"20" }'
+            '"marketStartTime":{"from":"' + now + '"}},"maxResults":"20" }'
         """
         print  market_catalouge_req
         """
@@ -51,7 +51,7 @@ def getMarketCatalouge(eventId):
 
 def getEventsList(team_name):
     endPoint = 'https://api.betfair.com/exchange/betting/rest/v1.0/listEvents/'
-    market_catalouge_req = '{"filter":{ "textQuery" : "'+ team_name +'" }}'
+    market_catalouge_req = '{"filter":{ "textQuery" : "' + team_name + '" }}'
     response = callAping(endPoint, market_catalouge_req)
 
     return response
@@ -60,9 +60,8 @@ def getEventsList(team_name):
 def login(key, user, password):
     endpoint = "https://identitysso.betfair.es/api/login"
 
-    header =    { 'X-Application'   : key
-                , 'Accept'          : 'application/json'
-                }
+    header = {'X-Application': key, 'Accept': 'application/json'
+              }
 
     url = endpoint + "?username=" + user + "&password=" + password
 
@@ -71,6 +70,19 @@ def login(key, user, password):
     return json.loads(response)["token"]
 
 
+def getMarketCatalouge(IDs):
+    for ID in IDs:
+        print getMarketCatalouge(ID)
+
+
+def getEventsforTeam(Team):
+    eventList = getEventsList(Team)
+    events = []
+    for event in eventList:
+        events.append({'ID': event['event']['id'],
+                       'Name': event['event']['name']})
+    return events
+
 
 if __name__ == "__main__":
     API_KEY = docopt(doc)["--key"][0]
@@ -78,10 +90,10 @@ if __name__ == "__main__":
     PASSWORD = docopt(doc)["--password"][0]
 
     ssoid = login(API_KEY, USERNAME, PASSWORD)
-    header = { 'X-Application': API_KEY,
-                'X-Authentication': ssoid,
-                'content-type': 'application/json',
-                'accept': 'application/json'
-                }
-
-    print getEventsList("Real Madrid")
+    header = {'X-Application': API_KEY,
+              'X-Authentication': ssoid,
+              'content-type': 'application/json',
+              'accept': 'application/json'
+              }
+    IDs = getEventsforTeam('Real Madrid')
+    print IDs
