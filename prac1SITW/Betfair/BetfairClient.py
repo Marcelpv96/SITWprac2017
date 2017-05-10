@@ -1,27 +1,25 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
-from docopt import docopt
 import requests
 import json
 import urllib2
 import datetime
-import sys
 
-doc = """
-Usage:
-    login.py -u <username> -p <password> -k <key> | --key=<key> --username=<username> --password=<password>
-Options:
-    -h --help                           Show this info. [default:None]
-    -u USERNAME --username=USERNAME     Specify betfair username. [default:None]
-    -p PASSWORD --password=PASSWORD     Specify betfair password. [default:None]
-    -k KEY --key=KEY                    Specify the key [default:None]
-"""
+
+def generate_header(username, password, api_key):
+	ssoid = login(api_key, username, password)
+    	header = {'X-Application': api_key,
+              	'X-Authentication': ssoid,
+              	'content-type': 'application/json',
+              	'accept': 'application/json'
+              }
+	return header
 
 
 def callAping(url, request):
     try:
-        req = urllib2.Request(url, request, header)
+        req = urllib2.Request(url, request, generate_header("guillem.orellana@gmail.com", "go147258369", "FHjLyss3VQbZfiMU"))
         response = urllib2.urlopen(req)
         jsonResponse = response.read()
         return json.loads(jsonResponse)
@@ -86,17 +84,3 @@ def getEventsforTeam(Team):
                        'Esport':'Futbol'})
     return events
 
-
-if __name__ == "__main__":
-    API_KEY = docopt(doc)["--key"][0]
-    USERNAME = docopt(doc)["--username"][0]
-    PASSWORD = docopt(doc)["--password"][0]
-
-    ssoid = login(API_KEY, USERNAME, PASSWORD)
-    header = {'X-Application': API_KEY,
-              'X-Authentication': ssoid,
-              'content-type': 'application/json',
-              'accept': 'application/json'
-              }
-    IDs = getEventsforTeam('Real Madrid')
-    print IDs

@@ -4,6 +4,8 @@ from django.template.loader import get_template
 from django.template import Context
 from django.shortcuts import render
 
+from Betfair.BetfairClient import getEventsforTeam
+
 from models import Team
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -41,5 +43,5 @@ def list_teams(request):
 
 def list_team_events(request, team):
     # TODO: Api call
-    print team
-    return render(request, 'list_team_events.html', {'content': 'Api call de ' + team})
+    events = getEventsforTeam(team)
+    return render(request, 'list_team_events.html', {'content': 'Api call de ' + team, 'events': events})

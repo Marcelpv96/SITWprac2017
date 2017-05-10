@@ -2,4 +2,7 @@
 
 {% block content %}
     <p style="text-align:center"> {{ content }} </p>
+    {% for event in events %}
+        {{ event }}
+    {% endfor %}
 {% endblock %}
