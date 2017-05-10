@@ -38,3 +38,8 @@ def list_teams(request):
         teams = paginator.page(paginator.num_pages)
 
     return render(request, 'list_teams.html', {'teams': teams, 'query': search_query})
+
+def list_team_events(request, team):
+    # TODO: Api call
+    print team
+    return render(request, 'list_team_events.html', {'content': 'Api call de ' + team})

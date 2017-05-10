@@ -24,7 +24,8 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', homePage, name='home'),
     url(r'^accounts/', include('accounts.urls')),
-    url(r'^teams/list_teams/', list_teams, name="list_teams")
+    url(r'^teams/list_teams/', list_teams, name="list_teams"),
+    url(r'^events/(?P<team>\w+)/$', list_team_events, name="list_team_events")
 ]
 
 if settings.DEBUG:
