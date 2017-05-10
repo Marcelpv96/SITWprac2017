@@ -12,6 +12,7 @@ class Sport(models.Model):
 
 class Team(models.Model):
     name = models.CharField(null=False, max_length=100)
+    short_name = models.CharField(null=True, max_length=100)
     crest = models.ImageField(upload_to="crests/")
 
     def __unicode__(self):

@@ -21,6 +21,7 @@ def save_teams():
             for team in ClientFootballData.teams_competition(competition['id'])['teams']:
                 new_team = Team()
                 new_team.name = team["name"]
+                new_team.short_name = team["shortName"]
                 utilities.save_image_from_url(new_team.crest, team['crestUrl'])
                 new_team.save()
 
