@@ -1,0 +1,8 @@
+Django==1.11.1
+get==0.0.0
+post==0.0.0
+public==0.0.0
+pytz==2017.2
+query-string==0.0.0
+request==0.0.0
+setupfiles==0.0.0
