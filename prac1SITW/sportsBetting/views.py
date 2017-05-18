@@ -3,10 +3,10 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 from django.template import Context
 from django.shortcuts import render, redirect
-
+from django.db.models import Q
 from Betfair.BetfairClient import getEventsforTeam
 
-from models import Team
+from models import Team, Event, Sport
 from forms import TeamForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
@@ -76,7 +76,11 @@ def list_teams(request):
 
     return render(request, 'list_teams.html', {'user':request.user, 'teams': teams, 'query': search_query})
 
-def list_team_events(request, team):
+def list_team_events(request, id):
     # TODO: Api call
-    events = getEventsforTeam(team)
-    return render(request, 'list_team_events.html', {'content': 'Api call de ' + team, 'events': events})
+    team = Team.objects.get(id=id).short_name
+    print id
+    #for event in events:
+    event = Event.objects.filter(Q(team1__id__exact=id) | Q(team2__id__exact=id))
+
+    return render(request, 'list_team_events.html', {'content': 'Api call de ' + team, 'events': event})

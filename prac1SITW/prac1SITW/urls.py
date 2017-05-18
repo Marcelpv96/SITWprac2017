@@ -29,7 +29,7 @@ urlpatterns = [
     url(r'^teams/edit_team/(?P<id>[0-9]+)$', edit_team, name="edit_team"),
     url(r'^teams/correctly/$', team_correctly, name="team_correctly"),
     url(r'^teams/delete/(?P<id>[0-9]+)$', team_remove, name="team_remove"),
-    url(r'^events/(?P<team>[a-zA-Z0-9_.-]*)/$', list_team_events, name="list_team_events")
+    url(r'^events/(?P<id>[0-9]+)/$', list_team_events, name="list_team_events")
 ]
 
 if settings.DEBUG:
