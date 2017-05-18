@@ -14,6 +14,7 @@ class Team(models.Model):
     name = models.CharField(null=False, max_length=100)
     short_name = models.CharField(null=True, max_length=100)
     crest = models.ImageField(upload_to="crests/")
+    created_by = models.ForeignKey(User, null=False)
 
     def __unicode__(self):
         return self.name
