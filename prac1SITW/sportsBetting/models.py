@@ -42,3 +42,6 @@ class Bet(models.Model):
 
     def __unicode__(self):
         return self.event.name + " - " + str(self.user)
+
+    def get_absolute_url(self):
+        return '/bets/list_bets'

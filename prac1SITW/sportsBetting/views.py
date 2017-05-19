@@ -4,12 +4,12 @@ from django.template.loader import get_template
 from django.template import Context
 from django.shortcuts import render, redirect
 from django.db.models import Q
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView
 
 from Betfair.BetfairClient import getEventsforTeam
 
 from models import Team, Event, Sport, Bet
-from forms import TeamForm
+from forms import TeamForm, BetForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 
@@ -91,10 +91,6 @@ def list_team_events(request, id):
 
 ################################### BETS VIEWS #########################################
 # Implemented with simple security, later on I will upgrade this
-def login_error(request):
-    return render(request, 'error_login_bets.html')
-
-
 class BetsList(ListView):
     model = Bet
 
@@ -102,3 +98,20 @@ class BetsList(ListView):
         context = super(BetsList, self).get_context_data(**kwargs)
         context['bets'] = Bet.objects.filter(user__username__exact=self.request.user.username)
         return context
+
+
+class BetCreate(CreateView):
+    model = Bet
+    template_name = 'create_bet.html'
+    form_class = BetForm
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+
+        # If an objects already exists, delete the old one and override it
+        if Bet.objects.filter(event=form.instance.event, description=form.instance.description).exists():
+            Bet.objects.filter(event=form.instance.event, description=form.instance.description).delete()
+
+        return super(BetCreate, self).form_valid(form)
+
+

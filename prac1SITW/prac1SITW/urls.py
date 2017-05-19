@@ -14,6 +14,8 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.urls import reverse_lazy
+from django.views.generic import UpdateView, DeleteView
 
 from django.views.static import serve
 from django.conf import settings
@@ -31,8 +33,22 @@ urlpatterns = [
     url(r'^teams/delete/(?P<id>[0-9]+)$', team_remove, name="team_remove"),
     url(r'^events/(?P<id>[0-9]+)/$', list_team_events, name="list_team_events"),
     url(r'^bets/list_bets/', BetsList.as_view(template_name='list_bets.html'), name="list_bets"),
-    url(r'^bets/login_error/', login_error, name="login_error"),
-
+    url(r'^bets/create/', BetCreate.as_view(), name="create_bet"),
+    url(r'^bets/edit/(?P<pk>[0-9]+)',
+        UpdateView.as_view(
+            model=Bet,
+            form_class=BetForm,
+            template_name='create_bet.html'
+        ),
+        name="edit_bet"),
+url(r'^bets/delete/(?P<pk>[0-9]+)',
+        DeleteView.as_view(
+            model=Bet,
+            context_object_name='bet',
+            template_name='delete_bet_confirm.html',
+            success_url=reverse_lazy('list_bets')
+        ),
+    name="delete_bet"),
 ]
 
 if settings.DEBUG:

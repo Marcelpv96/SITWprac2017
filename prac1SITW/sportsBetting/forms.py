@@ -35,9 +35,3 @@ class BetForm(forms.ModelForm):
             }),
         }
 
-    def save(self, commit=True, request=None, *args, **kwargs):
-        instance = super(TeamForm, self).save(commit=False)
-        instance.user = request.user
-        if commit:
-            instance.save()
-        return instance
