@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>You have to be logged in order to list your bets.</h2>
+    <p>Please <a href="{% url 'login' %}">login.</a></p>
+{% endblock %}

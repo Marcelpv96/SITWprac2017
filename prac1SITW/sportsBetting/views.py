@@ -4,9 +4,11 @@ from django.template.loader import get_template
 from django.template import Context
 from django.shortcuts import render, redirect
 from django.db.models import Q
+from django.views.generic import ListView
+
 from Betfair.BetfairClient import getEventsforTeam
 
-from models import Team, Event, Sport
+from models import Team, Event, Sport, Bet
 from forms import TeamForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
@@ -21,6 +23,7 @@ def homePage(request):
     return HttpResponse(page)
 
 
+############################### TEAMS VIEWS ############################################################
 def add_team(request):
     if request.method == 'POST':
         form = TeamForm(request.POST, request.FILES)
@@ -84,3 +87,18 @@ def list_team_events(request, id):
     event = Event.objects.filter(Q(team1__id__exact=id) | Q(team2__id__exact=id))
 
     return render(request, 'list_team_events.html', {'content': 'Api call de ' + team, 'events': event})
+
+
+################################### BETS VIEWS #########################################
+# Implemented with simple security, later on I will upgrade this
+def login_error(request):
+    return render(request, 'error_login_bets.html')
+
+
+class BetsList(ListView):
+    model = Bet
+
+    def get_context_data(self, **kwargs):
+        context = super(BetsList, self).get_context_data(**kwargs)
+        context['bets'] = Bet.objects.filter(user__username__exact=self.request.user.username)
+        return context
