@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.template.loader import get_template
 from django.template import Context
 from django.shortcuts import render, redirect
 from django.db.models import Q
-from django.views.generic import ListView, CreateView
+from django.utils.decorators import method_decorator
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from Betfair.BetfairClient import getEventsforTeam
 
@@ -13,6 +16,26 @@ from forms import TeamForm, BetForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 
+
+############################ SECURITY ######################################
+
+class LoginRequiredMixin(object):
+    @method_decorator(login_required())
+    def dispatch(self, *args, **kwargs):
+        return super(LoginRequiredMixin, self).dispatch(*args, **kwargs)
+
+class CheckIsOwnerMixin(object):
+    def get_object(self, *args, **kwargs):
+        obj = super(CheckIsOwnerMixin, self).get_object(*args, **kwargs)
+        if not obj.user == self.request.user:
+            raise PermissionDenied
+        return obj
+
+class BetLoginRequiredCheckIsOwnerUpdateView(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
+    model = Bet
+
+class BetLoginRequiredCheckIsOwnerDeleteView(LoginRequiredMixin, CheckIsOwnerMixin, DeleteView):
+    model = Bet
 
 def homePage(request):
     template = get_template("homepage.html")
@@ -91,7 +114,7 @@ def list_team_events(request, id):
 
 ################################### BETS VIEWS #########################################
 # Implemented with simple security, later on I will upgrade this
-class BetsList(ListView):
+class BetsList(LoginRequiredMixin, ListView):
     model = Bet
 
     def get_context_data(self, **kwargs):
@@ -100,7 +123,7 @@ class BetsList(ListView):
         return context
 
 
-class BetCreate(CreateView):
+class BetCreate(LoginRequiredMixin, CreateView):
     model = Bet
     template_name = 'create_bet.html'
     form_class = BetForm
