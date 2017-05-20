@@ -53,13 +53,13 @@ class TeamCreate(LoginRequiredMixin, CreateView):
     form_class = TeamForm
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
+        form.instance.created_by = self.request.user
 
         # If an objects already exists, delete the old one and override it
-        if Team.objects.filter(name=form.instance.name, short_name=form.instance.description).exists():
-            Team.objects.filter(name=form.instance.event, short_name=form.instance.description).delete()
+        if Team.objects.filter(name=form.instance.name, short_name=form.instance.short_name).exists():
+            Team.objects.filter(name=form.instance.name, short_name=form.instance.short_name).delete()
 
-        return super(BetCreate, self).form_valid(form)
+        return super(TeamCreate, self).form_valid(form)
 
 
 def edit_team(request, id):
