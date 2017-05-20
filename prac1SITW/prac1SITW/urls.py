@@ -27,7 +27,7 @@ urlpatterns = [
     url(r'^$', homePage, name='home'),
     url(r'^accounts/', include('accounts.urls')),
     url(r'^teams/list_teams/', list_teams, name="list_teams"),
-    url(r'^teams/add_team/$', add_team, name="add_team"),
+    url(r'^teams/create/$', TeamCreate.as_view(), name="create_team"),
     url(r'^teams/edit_team/(?P<id>[0-9]+)$', edit_team, name="edit_team"),
     url(r'^teams/correctly/$', team_correctly, name="team_correctly"),
     url(r'^teams/delete/(?P<id>[0-9]+)$', team_remove, name="team_remove"),

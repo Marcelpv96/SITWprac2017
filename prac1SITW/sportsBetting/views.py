@@ -47,18 +47,20 @@ def homePage(request):
 
 
 ############################### TEAMS VIEWS ############################################################
-def add_team(request):
-    if request.method == 'POST':
-        form = TeamForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save(request=request)
-            return redirect('team_correctly')
-    else:
-        form = TeamForm()
+class TeamCreate(LoginRequiredMixin, CreateView):
+    model = Bet
+    template_name = 'create_bet.html'
+    form_class = TeamForm
 
-    return render(request, 'add_team.html', {
-        'form': form
-    })
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+
+        # If an objects already exists, delete the old one and override it
+        if Team.objects.filter(name=form.instance.name, short_name=form.instance.description).exists():
+            Team.objects.filter(name=form.instance.event, short_name=form.instance.description).delete()
+
+        return super(BetCreate, self).form_valid(form)
+
 
 def edit_team(request, id):
     if request.method == 'POST':
@@ -136,5 +138,3 @@ class BetCreate(LoginRequiredMixin, CreateView):
             Bet.objects.filter(event=form.instance.event, description=form.instance.description).delete()
 
         return super(BetCreate, self).form_valid(form)
-
-
