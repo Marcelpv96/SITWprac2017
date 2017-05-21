@@ -58,6 +58,20 @@ def homePage(request):
 
 
 ############################### TEAMS VIEWS ############################################################
+# Make a list of objects paginated
+def pagination(request, item_list, elems_per_page):
+    paginator = Paginator(item_list, 2)
+
+    page = request.GET.get('page')
+    try:
+        objects = paginator.page(page)
+    except PageNotAnInteger:
+        objects = paginator.page(1)
+    except EmptyPage:
+        objects = paginator.page(paginator.num_pages)
+
+    return objects
+
 class TeamCreate(LoginRequiredMixin, CreateView):
     model = Bet
     template_name = 'create_bet.html'
@@ -76,7 +90,6 @@ class TeamList(ListView):
     model = Team
     template_name = 'list_teams.html'
 
-
     def get_context_data(self, **kwargs):
         context = super(TeamList, self).get_context_data(**kwargs)
 
@@ -89,27 +102,9 @@ class TeamList(ListView):
             context['teams'] = Team.objects.filter(name__contains=query)
             context['query'] = query
 
+        context['teams'] = pagination(self.request, context['teams'], 10)
+
         return context
-
-def list_teams(request):
-    teams_list = Team.objects.all().order_by('name')
-
-    if request.method == 'GET':
-        search_query = request.GET.get('search_box', default=None)
-        if search_query:
-            teams_list = Team.objects.filter(name__contains=search_query).order_by('name')
-
-    paginator = Paginator(teams_list, 20)
-
-    page = request.GET.get('page')
-    try:
-        teams = paginator.page(page)
-    except PageNotAnInteger:
-        teams = paginator.page(1)
-    except EmptyPage:
-        teams = paginator.page(paginator.num_pages)
-
-    return render(request, 'list_teams.html', {'user':request.user, 'teams': teams, 'query': search_query})
 
 
 def list_team_events(request, id):
