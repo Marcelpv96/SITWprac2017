@@ -27,6 +27,11 @@ class LoginRequiredMixin(object):
 class CheckIsOwnerMixin(object):
     def get_object(self, *args, **kwargs):
         obj = super(CheckIsOwnerMixin, self).get_object(*args, **kwargs)
+        if type(obj) is Team:
+            if not obj.created_by == self.request.user:
+                raise PermissionDenied
+            return obj
+            
         if not obj.user == self.request.user:
             raise PermissionDenied
         return obj
@@ -36,6 +41,12 @@ class BetLoginRequiredCheckIsOwnerUpdateView(LoginRequiredMixin, CheckIsOwnerMix
 
 class BetLoginRequiredCheckIsOwnerDeleteView(LoginRequiredMixin, CheckIsOwnerMixin, DeleteView):
     model = Bet
+
+class TeamLoginRequiredCheckIsOwnerUpdateView(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
+    model = Team
+
+class TeamLoginRequiredCheckIsOwnerDeleteView(LoginRequiredMixin, CheckIsOwnerMixin, DeleteView):
+    model = Team
 
 def homePage(request):
     template = get_template("homepage.html")

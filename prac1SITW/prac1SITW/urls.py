@@ -28,7 +28,11 @@ urlpatterns = [
     url(r'^accounts/', include('accounts.urls')),
     url(r'^teams/list_teams/', list_teams, name="list_teams"),
     url(r'^teams/create/$', TeamCreate.as_view(), name="create_team"),
-    url(r'^teams/edit_team/(?P<id>[0-9]+)$', edit_team, name="edit_team"),
+    url(r'^teams/edit_team/(?P<pk>[0-9]+)$',
+        TeamLoginRequiredCheckIsOwnerUpdateView.as_view(
+            form_class=TeamForm,
+            template_name="create_team.html"
+        ), name="edit_team"),
     url(r'^teams/correctly/$', team_correctly, name="team_correctly"),
     url(r'^teams/delete/(?P<id>[0-9]+)$', team_remove, name="team_remove"),
     url(r'^events/(?P<id>[0-9]+)/$', list_team_events, name="list_team_events"),
