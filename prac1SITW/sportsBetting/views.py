@@ -31,7 +31,7 @@ class CheckIsOwnerMixin(object):
             if not obj.created_by == self.request.user:
                 raise PermissionDenied
             return obj
-            
+
         if not obj.user == self.request.user:
             raise PermissionDenied
         return obj
@@ -72,28 +72,24 @@ class TeamCreate(LoginRequiredMixin, CreateView):
 
         return super(TeamCreate, self).form_valid(form)
 
+class TeamList(ListView):
+    model = Team
+    template_name = 'list_teams.html'
 
-def edit_team(request, id):
-    if request.method == 'POST':
-        form = TeamForm(request.POST, request.FILES, instance=Team.objects.get(id=id))
-        if form.is_valid():
-            form.save(request=request)
-            return redirect('team_correctly')
-    else:
-        form = TeamForm(instance=Team.objects.get(id=id))
 
-    return render(request, 'add_team.html', {
-        'form': form
-    })
+    def get_context_data(self, **kwargs):
+        context = super(TeamList, self).get_context_data(**kwargs)
 
-def team_remove(request, id):
-    tmp = Team.objects.get(id=id)
-    Team.objects.get(id=id).delete()
+        context['teams'] = Team.objects.all()
+        context['user'] = self.request.user
 
-    return render(request, 'remove_team.html', { 'team': tmp })
+        query = self.request.GET.get('search_box', default=None)
 
-def team_correctly(request):
-    return render (request, 'team_correctly.html')
+        if query:
+            context['teams'] = Team.objects.filter(name__contains=query)
+            context['query'] = query
+
+        return context
 
 def list_teams(request):
     teams_list = Team.objects.all().order_by('name')
@@ -114,6 +110,7 @@ def list_teams(request):
         teams = paginator.page(paginator.num_pages)
 
     return render(request, 'list_teams.html', {'user':request.user, 'teams': teams, 'query': search_query})
+
 
 def list_team_events(request, id):
     # TODO: Api call
