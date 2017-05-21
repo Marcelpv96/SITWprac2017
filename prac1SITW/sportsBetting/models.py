@@ -19,9 +19,8 @@ class Team(models.Model):
     def __unicode__(self):
         return self.name
 
-    def show_crest(self):
-        with open(self.crest.path) as fp:
-            return fp.read().encode('utf8')
+    def get_absolute_url(self):
+        return "/teams/list_teams"
 
 
 class Event(models.Model):

@@ -27,6 +27,11 @@ class LoginRequiredMixin(object):
 class CheckIsOwnerMixin(object):
     def get_object(self, *args, **kwargs):
         obj = super(CheckIsOwnerMixin, self).get_object(*args, **kwargs)
+        if type(obj) is Team:
+            if not obj.created_by == self.request.user:
+                raise PermissionDenied
+            return obj
+
         if not obj.user == self.request.user:
             raise PermissionDenied
         return obj
@@ -36,6 +41,12 @@ class BetLoginRequiredCheckIsOwnerUpdateView(LoginRequiredMixin, CheckIsOwnerMix
 
 class BetLoginRequiredCheckIsOwnerDeleteView(LoginRequiredMixin, CheckIsOwnerMixin, DeleteView):
     model = Bet
+
+class TeamLoginRequiredCheckIsOwnerUpdateView(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
+    model = Team
+
+class TeamLoginRequiredCheckIsOwnerDeleteView(LoginRequiredMixin, CheckIsOwnerMixin, DeleteView):
+    model = Team
 
 def homePage(request):
     template = get_template("homepage.html")
@@ -47,40 +58,38 @@ def homePage(request):
 
 
 ############################### TEAMS VIEWS ############################################################
-def add_team(request):
-    if request.method == 'POST':
-        form = TeamForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save(request=request)
-            return redirect('team_correctly')
-    else:
-        form = TeamForm()
+class TeamCreate(LoginRequiredMixin, CreateView):
+    model = Bet
+    template_name = 'create_bet.html'
+    form_class = TeamForm
 
-    return render(request, 'add_team.html', {
-        'form': form
-    })
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
 
-def edit_team(request, id):
-    if request.method == 'POST':
-        form = TeamForm(request.POST, request.FILES, instance=Team.objects.get(id=id))
-        if form.is_valid():
-            form.save(request=request)
-            return redirect('team_correctly')
-    else:
-        form = TeamForm(instance=Team.objects.get(id=id))
+        # If an objects already exists, delete the old one and override it
+        if Team.objects.filter(name=form.instance.name, short_name=form.instance.short_name).exists():
+            Team.objects.filter(name=form.instance.name, short_name=form.instance.short_name).delete()
 
-    return render(request, 'add_team.html', {
-        'form': form
-    })
+        return super(TeamCreate, self).form_valid(form)
 
-def team_remove(request, id):
-    tmp = Team.objects.get(id=id)
-    Team.objects.get(id=id).delete()
+class TeamList(ListView):
+    model = Team
+    template_name = 'list_teams.html'
 
-    return render(request, 'remove_team.html', { 'team': tmp })
 
-def team_correctly(request):
-    return render (request, 'team_correctly.html')
+    def get_context_data(self, **kwargs):
+        context = super(TeamList, self).get_context_data(**kwargs)
+
+        context['teams'] = Team.objects.all()
+        context['user'] = self.request.user
+
+        query = self.request.GET.get('search_box', default=None)
+
+        if query:
+            context['teams'] = Team.objects.filter(name__contains=query)
+            context['query'] = query
+
+        return context
 
 def list_teams(request):
     teams_list = Team.objects.all().order_by('name')
@@ -101,6 +110,7 @@ def list_teams(request):
         teams = paginator.page(paginator.num_pages)
 
     return render(request, 'list_teams.html', {'user':request.user, 'teams': teams, 'query': search_query})
+
 
 def list_team_events(request, id):
     # TODO: Api call
@@ -136,5 +146,3 @@ class BetCreate(LoginRequiredMixin, CreateView):
             Bet.objects.filter(event=form.instance.event, description=form.instance.description).delete()
 
         return super(BetCreate, self).form_valid(form)
-
-

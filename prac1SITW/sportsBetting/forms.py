@@ -15,14 +15,7 @@ class TeamForm(forms.ModelForm):
                 'placeholder': 'This name will be used in creating the name event...'
             }),
         }
-
-    def save(self, commit=True, request=None, *args, **kwargs):
-        instance = super(TeamForm, self).save(commit=False)
-        instance.created_by = request.user
-        if commit:
-            instance.save()
-        return instance
-
+        
 
 class BetForm(forms.ModelForm):
     class Meta:
@@ -34,4 +27,3 @@ class BetForm(forms.ModelForm):
                 'placeholder': 'Enter the bet description here...'
             }),
         }
-

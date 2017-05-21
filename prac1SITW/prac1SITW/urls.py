@@ -26,21 +26,39 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', homePage, name='home'),
     url(r'^accounts/', include('accounts.urls')),
-    url(r'^teams/list_teams/', list_teams, name="list_teams"),
-    url(r'^teams/add_team/$', add_team, name="add_team"),
-    url(r'^teams/edit_team/(?P<id>[0-9]+)$', edit_team, name="edit_team"),
-    url(r'^teams/correctly/$', team_correctly, name="team_correctly"),
-    url(r'^teams/delete/(?P<id>[0-9]+)$', team_remove, name="team_remove"),
+    # Team patterns
+    url(r'^teams/list_teams/',
+        TeamList.as_view(),
+        name="list_teams"),
+    url(r'^teams/create/$', TeamCreate.as_view(), name="create_team"),
+    url(r'^teams/edit/(?P<pk>[0-9]+)$',
+        TeamLoginRequiredCheckIsOwnerUpdateView.as_view(
+            form_class=TeamForm,
+            template_name="create_team.html"
+        ),
+        name="edit_team"),
+    url(r'^teams/delete/(?P<pk>[0-9]+)$',
+        TeamLoginRequiredCheckIsOwnerDeleteView.as_view(
+            template_name="delete_team_confirm.html",
+            context_object_name="team",
+            success_url=reverse_lazy('list_teams')
+        ), name="delete_team"),
+    # Events patterns
     url(r'^events/(?P<id>[0-9]+)/$', list_team_events, name="list_team_events"),
-    url(r'^bets/list_bets/', BetsList.as_view(template_name='list_bets.html'), name="list_bets"),
-    url(r'^bets/create/', BetCreate.as_view(), name="create_bet"),
+    # Bets patterns
+    url(r'^bets/list_bets/',
+        BetsList.as_view(template_name='list_bets.html'),
+        name="list_bets"),
+    url(r'^bets/create/',
+        BetCreate.as_view(),
+        name="create_bet"),
     url(r'^bets/edit/(?P<pk>[0-9]+)',
         BetLoginRequiredCheckIsOwnerUpdateView.as_view(
             form_class=BetForm,
             template_name='create_bet.html'
         ),
         name="edit_bet"),
-url(r'^bets/delete/(?P<pk>[0-9]+)',
+    url(r'^bets/delete/(?P<pk>[0-9]+)',
         BetLoginRequiredCheckIsOwnerDeleteView.as_view(
             context_object_name='bet',
             template_name='delete_bet_confirm.html',
