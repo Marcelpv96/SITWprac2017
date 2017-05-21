@@ -23,6 +23,20 @@ class Team(models.Model):
         return "/teams/list_teams"
 
 
+class Competition(models.Model):
+    name = models.CharField(null=False, max_length=100)
+    short_name = models.CharField(null=True, max_length=100)
+    teams = models.ManyToManyField(Team)
+    logo = models.ImageField(upload_to="competitions/")
+    user = models.ForeignKey(User, null=False)
+
+    def __unicode__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return "/competitions/list_competitions"
+
+
 class Event(models.Model):
     name = models.CharField(null=False, max_length=100)
     sport = models.ForeignKey(Sport)
