@@ -2,6 +2,7 @@
 
 {% block content %}
     <h1>Competitions</h1>
+    <h3>Click to a competition to list its teams.</h3>
     <form  class="form-inline" type="get" action="." style="margin: 30px 0px 60px 10px">
         <input  class="form-control" id="search_box" type="text" name="search_box" style="width:50%" placeholder="Search Team" >
         <div class="btn-group">
@@ -31,7 +32,7 @@
                 {% for competition in competitions %}
                     <tr>
                         <td class="text-center" style="vertical-align: middle">
-                            <a href="#"><h3>{{ competition.name }}</h3></a>
+                            <a href="/teams/list_teams/?search_box=competition:{{ competition.name }}"><h3>{{ competition.name }}</h3></a>
                         </td>
                         <td class=" text-center center-block" style="vertical-align: middle">
                         {% if competition.logo %}

@@ -110,7 +110,12 @@ class TeamList(ListView):
         query = self.request.GET.get('search_box', default=None)
 
         if query:
-            context['teams'] = Team.objects.filter(name__contains=query)
+            if query.startswith('competition:'):
+                competition_name = query[len('competition:'):]
+                context['teams'] = Team.objects.filter(competition__name__exact=competition_name)
+            else:
+                context['teams'] = Team.objects.filter(name__contains=query)
+
             context['query'] = query
 
         context['teams'] = pagination(self.request, context['teams'], 10)
