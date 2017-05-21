@@ -24,7 +24,7 @@
                 {% endif %}
                 {% if user.username %}
                 <p>You don't find what you're looking for...</p>
-                <a href="#"><button class="btn btn-primary">Add a new competition</button></a>
+                <a href="{% url 'create_competition' %}"><button class="btn btn-primary">Add a new competition</button></a>
                 {% endif %}
             </th>
             <tbody>

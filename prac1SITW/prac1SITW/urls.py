@@ -32,14 +32,14 @@ urlpatterns = [
         name="list_teams"),
     url(r'^teams/create/$', TeamCreate.as_view(), name="create_team"),
     url(r'^teams/edit/(?P<pk>[0-9]+)$',
-        TeamLoginRequiredCheckIsOwnerUpdateView.as_view(
+        LoginRequiredCheckIsOwnerUpdateView.as_view(
             form_class=TeamForm,
-            template_name="create_team.html"
+            model=Team,
         ),
         name="edit_team"),
     url(r'^teams/delete/(?P<pk>[0-9]+)$',
         TeamLoginRequiredCheckIsOwnerDeleteView.as_view(
-            template_name="delete_team_confirm.html",
+            template_name='delete_team_confirm.html',
             context_object_name="team",
             success_url=reverse_lazy('list_teams')
         ), name="delete_team"),
@@ -47,6 +47,7 @@ urlpatterns = [
     url(r'^competitions/list_competitions/',
         CompetitionList.as_view(),
         name="list_competitions"),
+    url(r'^competitions/create/$', CompetitionCreate.as_view(), name="create_competition"),
     # Events patterns
     url(r'^events/(?P<id>[0-9]+)/$', list_team_events, name="list_team_events"),
     # Bets patterns
@@ -57,9 +58,9 @@ urlpatterns = [
         BetCreate.as_view(),
         name="create_bet"),
     url(r'^bets/edit/(?P<pk>[0-9]+)',
-        BetLoginRequiredCheckIsOwnerUpdateView.as_view(
+        LoginRequiredCheckIsOwnerUpdateView.as_view(
             form_class=BetForm,
-            template_name='create_bet.html'
+            model=Bet,
         ),
         name="edit_bet"),
     url(r'^bets/delete/(?P<pk>[0-9]+)',

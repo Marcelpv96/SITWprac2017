@@ -1,5 +1,5 @@
 from django import forms
-from .models import Team,Bet
+from .models import *
 
 class TeamForm(forms.ModelForm):
     class Meta:
@@ -15,7 +15,23 @@ class TeamForm(forms.ModelForm):
                 'placeholder': 'This name will be used in creating the name event...'
             }),
         }
-        
+
+class CompetitionForm(forms.ModelForm):
+    class Meta:
+        model = Competition
+        exclude = ('user', )
+        widgets = {
+            'name' : forms.TextInput(attrs={
+                'class': 'input-sm form-control',
+                'placeholder': 'Enter the complete name...'
+            }),
+            'short_name': forms.TextInput(attrs={
+                'class': 'input-sm form-control',
+                'placeholder': 'This name will be used in creating the name event...'
+            }),
+        }
+
+
 
 class BetForm(forms.ModelForm):
     class Meta:

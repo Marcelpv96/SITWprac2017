@@ -12,7 +12,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from Betfair.BetfairClient import getEventsforTeam
 
 from models import *
-from forms import TeamForm, BetForm
+from forms import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 
@@ -36,14 +36,16 @@ class CheckIsOwnerMixin(object):
             raise PermissionDenied
         return obj
 
-class BetLoginRequiredCheckIsOwnerUpdateView(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
-    model = Bet
+class LoginRequiredCheckIsOwnerUpdateView(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
+    template_name = 'form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(LoginRequiredCheckIsOwnerUpdateView,self).get_context_data(**kwargs)
+        context['model'] = self.model.__name__
+        return context
 
 class BetLoginRequiredCheckIsOwnerDeleteView(LoginRequiredMixin, CheckIsOwnerMixin, DeleteView):
     model = Bet
-
-class TeamLoginRequiredCheckIsOwnerUpdateView(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
-    model = Team
 
 class TeamLoginRequiredCheckIsOwnerDeleteView(LoginRequiredMixin, CheckIsOwnerMixin, DeleteView):
     model = Team
@@ -73,8 +75,8 @@ def pagination(request, item_list, elems_per_page):
     return objects
 
 class TeamCreate(LoginRequiredMixin, CreateView):
-    model = Bet
-    template_name = 'create_bet.html'
+    model = Team
+    template_name = 'form.html'
     form_class = TeamForm
 
     def form_valid(self, form):
@@ -85,6 +87,12 @@ class TeamCreate(LoginRequiredMixin, CreateView):
             Team.objects.filter(name=form.instance.name, short_name=form.instance.short_name).delete()
 
         return super(TeamCreate, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(TeamCreate, self).get_context_data(**kwargs)
+        context['model'] = 'Team'
+        return context
+
 
 class TeamList(ListView):
     model = Team
@@ -137,6 +145,27 @@ class CompetitionList(ListView):
 
             return context
 
+class CompetitionCreate(LoginRequiredMixin, CreateView):
+    model = Competition
+    template_name = 'form.html'
+    form_class = CompetitionForm
+
+    def get_context_data(self, **kwargs):
+        context = super(CompetitionCreate, self).get_context_data(**kwargs)
+        context['model'] = 'Competition'
+        return context
+
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+
+        # If an objects already exists, delete the old one and override it
+        if Competition.objects.filter(name=form.instance.name, short_name=form.instance.short_name).exists():
+            Competition.objects.filter(name=form.instance.name, short_name=form.instance.short_name).delete()
+
+        return super(CompetitionCreate, self).form_valid(form)
+
+
 ################################### BETS VIEWS #########################################
 # Implemented with simple security, later on I will upgrade this
 class BetsList(LoginRequiredMixin, ListView):
@@ -150,7 +179,7 @@ class BetsList(LoginRequiredMixin, ListView):
 
 class BetCreate(LoginRequiredMixin, CreateView):
     model = Bet
-    template_name = 'create_bet.html'
+    template_name = 'form.html'
     form_class = BetForm
 
     def form_valid(self, form):
@@ -161,3 +190,8 @@ class BetCreate(LoginRequiredMixin, CreateView):
             Bet.objects.filter(event=form.instance.event, description=form.instance.description).delete()
 
         return super(BetCreate, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(BetCreate, self).get_context_data(**kwargs)
+        context['model'] = 'Bet'
+        return context
