@@ -43,6 +43,10 @@ urlpatterns = [
             context_object_name="team",
             success_url=reverse_lazy('list_teams')
         ), name="delete_team"),
+    #Competition patterns
+    url(r'^competitions/list_competitions/',
+        CompetitionList.as_view(),
+        name="list_competitions"),
     # Events patterns
     url(r'^events/(?P<id>[0-9]+)/$', list_team_events, name="list_team_events"),
     # Bets patterns

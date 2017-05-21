@@ -11,7 +11,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from Betfair.BetfairClient import getEventsforTeam
 
-from models import Team, Event, Sport, Bet
+from models import *
 from forms import TeamForm, BetForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
@@ -60,7 +60,7 @@ def homePage(request):
 ############################### TEAMS VIEWS ############################################################
 # Make a list of objects paginated
 def pagination(request, item_list, elems_per_page):
-    paginator = Paginator(item_list, 2)
+    paginator = Paginator(item_list, elems_per_page)
 
     page = request.GET.get('page')
     try:
@@ -116,6 +116,26 @@ def list_team_events(request, id):
 
     return render(request, 'list_team_events.html', {'content': 'Api call de ' + team, 'events': event})
 
+################################### COMPETITION VIEWS ################################
+class CompetitionList(ListView):
+        model = Competition
+        template_name = 'list_competitions.html'
+
+        def get_context_data(self, **kwargs):
+            context = super(CompetitionList, self).get_context_data(**kwargs)
+
+            context['competitions'] = Competition.objects.all()
+            context['user'] = self.request.user
+
+            query = self.request.GET.get('search_box', default=None)
+
+            if query:
+                context['competitions'] = Competition.objects.filter(name__contains=query)
+                context['query'] = query
+
+            context['competitions'] = pagination(self.request, context['competitions'], 10)
+
+            return context
 
 ################################### BETS VIEWS #########################################
 # Implemented with simple security, later on I will upgrade this
