@@ -1,3 +1,3 @@
-from DataGathering import Teams
+from Teams import *
 
-Teams.save_teams()
+save_teams()

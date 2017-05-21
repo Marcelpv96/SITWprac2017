@@ -47,7 +47,22 @@ urlpatterns = [
     url(r'^competitions/list_competitions/',
         CompetitionList.as_view(),
         name="list_competitions"),
-    url(r'^competitions/create/$', CompetitionCreate.as_view(), name="create_competition"),
+    url(r'^competitions/create/$',
+        CompetitionCreate.as_view(),
+        name="create_competition"),
+    url(r'^competitions/edit/(?P<pk>[0-9]+)$',
+        LoginRequiredCheckIsOwnerUpdateView.as_view(
+            form_class=CompetitionForm,
+            model=Competition,
+        ),
+        name="edit_competition"),
+    url(r'^competitions/delete/(?P<pk>[0-9]+)$',
+        CompetitionLoginRequiredCheckIsOwnerDeleteView.as_view(
+            template_name='delete_competition_confirm.html',
+            context_object_name="competition",
+            success_url=reverse_lazy('list_competitions')
+        ),
+        name="delete_competition"),
     # Events patterns
     url(r'^events/(?P<id>[0-9]+)/$', list_team_events, name="list_team_events"),
     # Bets patterns

@@ -50,6 +50,9 @@ class BetLoginRequiredCheckIsOwnerDeleteView(LoginRequiredMixin, CheckIsOwnerMix
 class TeamLoginRequiredCheckIsOwnerDeleteView(LoginRequiredMixin, CheckIsOwnerMixin, DeleteView):
     model = Team
 
+class CompetitionLoginRequiredCheckIsOwnerDeleteView(LoginRequiredMixin, CheckIsOwnerMixin, DeleteView):
+    model = Competition
+
 def homePage(request):
     template = get_template("homepage.html")
     var = Context({"content": "Estàs a sports betiitng.",

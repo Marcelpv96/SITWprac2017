@@ -1,9 +1,10 @@
-from DataGathering.ClientFootballData import ClientFootballData
-from DataGathering import utilities
+from ClientFootballData import ClientFootballData
+from utilities import *
 
-utilities.setup_django()
+setup_django()
 
 from sportsBetting.models import Team
+from django.contrib.auth.models import User
 
 COMPETITIONS = ["PL",   # Premier League
                 "BL1",  # BundesLiga
@@ -22,6 +23,6 @@ def save_teams():
                 new_team = Team()
                 new_team.name = team["name"]
                 new_team.short_name = team["shortName"]
-                utilities.save_image_from_url(new_team.crest, team['crestUrl'])
+                new_team.created_by = User.objects.get(username='admin')
+                save_image_from_url(new_team.crest, team['crestUrl'])
                 new_team.save()
-

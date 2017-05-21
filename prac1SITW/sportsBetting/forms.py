@@ -29,6 +29,10 @@ class CompetitionForm(forms.ModelForm):
                 'class': 'input-sm form-control',
                 'placeholder': 'This name will be used in creating the name event...'
             }),
+            'teams': forms.SelectMultiple(attrs={
+                'class': 'form-control',
+                'size' : '10',
+            }),
         }
 
 
