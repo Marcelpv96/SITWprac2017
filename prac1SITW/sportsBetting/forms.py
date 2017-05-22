@@ -2,6 +2,7 @@ from django import forms
 from .models import *
 
 class TeamForm(forms.ModelForm):
+    crest = forms.ImageField(required=False)
     class Meta:
         model = Team
         fields = ('name', 'short_name', 'crest', )
