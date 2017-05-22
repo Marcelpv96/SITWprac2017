@@ -6,7 +6,7 @@ from django.test.runner import DiscoverRunner
 from django.test.testcases import LiveServerTestCase
 from splinter.browser import Browser
 
-os.environ["DJANGO_SETTINGS_MODULE"] = "pract1SITW.settings"
+os.environ["DJANGO_SETTINGS_MODULE"] = "SITWprac2017.prac1SITW.settings"
 
 class ExtendedContext(Context):
     def get_url(self, to=None, *args, **kwargs):

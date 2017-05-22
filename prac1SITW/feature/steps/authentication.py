@@ -36,4 +36,4 @@ def step_impl(context, link_text):
 
 @then("I'm redirected to the login form")
 def step_impl(context):
-assert context.browser.url.startswith(context.get_url('login'))
+    assert context.browser.url.startswith(context.get_url('login'))
