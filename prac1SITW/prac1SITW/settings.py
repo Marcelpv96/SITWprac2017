@@ -41,7 +41,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'sportsBetting'
+    'sportsBetting',
+    'django_behave'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -109,3 +110,6 @@ STATIC_URL = '/static/'
 # Media settings
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+#Behave tests
+TEST_RUNNER = 'django_behave.runner.DjangoBehaveOnlyTestSuiteRunner'

@@ -5,19 +5,17 @@ use_step_matcher("parse")
 
 @given('Exists a user "{username}" with password "{password}"')
 def step_impl(context, username, password):
-    context.browser.visit('http://127.0.0.1:8000/accounts/register/')
-    context.browser.fill('username', username)
-    context.browser.fill('password1', password)
-    context.browser.fill('password2', password)
-    context.browser.find_by_value('Register').first.click()
-
+    from django.contrib.auth.models import User
+    if not User.objects.filter(username=username):
+        User.objects.create_user(username=username, email="email@test.com", password=password)
 
 @given('I login as user "{username}" with password "{password}"')
 def step_impl(context, username, password):
-    context.browser.visit('http://127.0.0.1:8000/accounts/login/?next=/accounts/profile')
-    context.browser.fill('username', 'admin')
-    context.browser.fill('password', '1234')
-    context.browser.find_by_value('login').first.click()
+    context.browser.visit(context.get_url('/accounts/login/?next=/accounts/profile/'))
+    form = context.browser.find_by_tag('form').first
+    context.browser.fill('username', username)
+    context.browser.fill('password', password)
+    form.find_by_value('login').first.click()
     assert context.browser.is_text_present('Estas loggejat correctament')
 
 
