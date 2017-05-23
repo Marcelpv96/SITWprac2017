@@ -27,7 +27,7 @@ class Competition(models.Model):
     name = models.CharField(null=False, max_length=100)
     short_name = models.CharField(null=True, max_length=100)
     teams = models.ManyToManyField(Team)
-    logo = models.ImageField(upload_to="competitions/")
+    logo = models.ImageField(upload_to="competitions/", null=True)
     user = models.ForeignKey(User, null=False)
 
     def __unicode__(self):

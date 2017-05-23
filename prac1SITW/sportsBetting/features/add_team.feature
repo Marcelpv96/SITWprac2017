@@ -4,8 +4,6 @@ Feature: Add team
 
   Background: There is a user registered
     Given Exists a user "user1" with password "password"
-    And Exists a user "user2" with password "password"
-
 
 
     Scenario: When the user is logged in, adds a new team
@@ -17,14 +15,12 @@ Feature: Add team
       Then I found the team named "Test"
 
 
-    Scenario: User tries to edit a team that he hasn't created
-      Given I login as user "user1" with password "password"
-      And Exists a team created by "user2"
-      | name      | short_name  |
-      | user2Team | u2t         |
-      When I edit the team "user2Team"
-      Then Server responds with page containing "403 Forbidden"
-
+    Scenario: User which is not logged in tires to add a team
+      Given I'm not logged in
+      When I add a new team
+      | name | short_name |
+      | Test | FCT        |
+      Then I'm redirected to the login page
 
 
 

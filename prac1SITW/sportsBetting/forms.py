@@ -18,6 +18,7 @@ class TeamForm(forms.ModelForm):
         }
 
 class CompetitionForm(forms.ModelForm):
+    logo = forms.ImageField(required=False)
     class Meta:
         model = Competition
         exclude = ('user', )
