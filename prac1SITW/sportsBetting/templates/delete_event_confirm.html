@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+    <form action="" method="post">{% csrf_token %}
+    <h3>Are you sure you want to delete the following bet?</h3>
+    <table class="table table-striped table-hover">
+            <th class="text-center" colspan="1">
+                <h2>Name</h2>
+            </th>
+            <th class="text-center" colspan="1">
+                <h2>Local</h2>
+            </th>
+            <th class="text-center" colspan="1">
+
+            </th>
+            <th class="text-center" colspan="3">
+                <h2>Visitor</h2>
+            </th>
+            <tbody>
+                <tr>
+                    <td class="text-center" style="vertical-align: middle">
+                        <h3>{{ event.quota }}€</h3>
+                    </td>
+
+                    <td class=" text-center center-block" style="vertical-align: middle">
+                    {% if event.team1.crest %}
+                        <img src="{{ event.team1.crest.url }}" width="100px" height="100px" >
+                    {% else %}
+                        <img src="/media/crests/no_crest.svg" width="100px" height="100px" >
+                    {% endif %}
+                    </td>
+                    <td class="text-center" style="vertical-align: middle">
+                        <h2>VS.</h2>
+                    </td>
+                    <td class=" text-center center-block" style="vertical-align: middle">
+                    {% if event.team2.crest %}
+                        <img src="{{ event.team2.crest.url }}" width="100px" height="100px" >
+                    {% else %}
+                        <img src="/media/crests/no_crest.svg" width="100px" height="100px" >
+                    {% endif %}
+                    </td>
+        </tbody>
+    </table>
+    <input type="submit" class="btn btn-danger" value="Confirm">
+    </form>
+{% endblock %}

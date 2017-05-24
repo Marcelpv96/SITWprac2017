@@ -60,6 +60,9 @@ class CompetitionLoginRequiredCheckIsOwnerDeleteView(LoginRequiredMixin, CheckIs
     model = Competition
 
 
+class EventLoginRequiredCheckIsOwnerDeleteView(LoginRequiredMixin, CheckIsOwnerMixin, DeleteView):
+    model = Event
+
 def homePage(request):
     template = get_template("homepage.html")
     var = Context({"content": "Estàs a sports betiitng.",
@@ -133,19 +136,7 @@ class TeamList(ListView):
         return context
 
 
-def list_team_events(request, id):
-    # TODO: Api call
-    team = Team.objects.get(id=id).short_name
-    print id
-    # for event in events:
-    event = Event.objects.filter(
-        Q(team1__id__exact=id) | Q(team2__id__exact=id))
-
-    return render(request, 'list_team_events.html', {'content': 'Api call de ' + team, 'events': event})
-
 ################################### COMPETITION VIEWS ####################
-
-
 class CompetitionList(ListView):
     model = Competition
     template_name = 'list_competitions.html'
@@ -191,14 +182,17 @@ class CompetitionCreate(LoginRequiredMixin, CreateView):
 
 
 ################################### EVENTS VIEWS #########################
-
 class EventList(LoginRequiredMixin, ListView):
     model = Event
     template_name = "list_events.html"
 
     def get_context_data(self, **kwargs):
         context = super(EventList, self).get_context_data(**kwargs)
-        context['Events'] = Event.objects.all()
+        if self.kwargs['pk']:
+            context['Events'] = Event.objects.filter(Q(team1__id=int(self.kwargs['pk'])) | Q(team2__id=int(self.kwargs['pk'])))
+        else:
+            context['Events'] = Event.objects.all()
+
         context['Events'] = pagination(self.request, context['Events'], 10)
 
         return context

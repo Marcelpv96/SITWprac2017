@@ -53,10 +53,8 @@
                 <td class="text-center" style="vertical-align: middle">
                     <div class="btn-group" >
                     {% if event.user.username == user.username %}
-                        <a href="#"class="btn btn-success">Edit</a>
-                        <a href="#"class="btn btn-danger">Delete</a>
+                        <a href="{% url 'delete_event' event.id %}"class="btn btn-danger">Delete</a>
                     {% else %}
-                        <button type="button" class="btn btn-success disabled">Edit</button>
                         <button type="button" class="btn btn-danger disabled">Delete</button>
                     {% endif %}
                     </div>

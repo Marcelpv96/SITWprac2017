@@ -48,6 +48,10 @@ class Event(models.Model):
         return self.name
 
 
+    def get_absolute_url(self):
+        return "/events/list_events"
+
+
 class Bet(models.Model):
     quota = models.DecimalField(null=True, decimal_places=2, max_digits=5)
     description = models.TextField(null=True)
