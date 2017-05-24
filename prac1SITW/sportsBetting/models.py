@@ -40,6 +40,7 @@ class Competition(models.Model):
 class Event(models.Model):
     name = models.CharField(null=False, max_length=100)
     sport = models.ForeignKey(Sport)
+    user = models.ForeignKey(User)
     team1 = models.ForeignKey(Team, null=True, related_name='local')
     team2 = models.ForeignKey(Team, null=True, related_name='visitor')
 
