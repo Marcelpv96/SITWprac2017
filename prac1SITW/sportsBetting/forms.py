@@ -41,8 +41,6 @@ class CompetitionForm(forms.ModelForm):
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ('name', 'sport', 'team1', 'team2',)
-
         exclude = ('user', )
         widgets = {
             'name': forms.TextInput(attrs={

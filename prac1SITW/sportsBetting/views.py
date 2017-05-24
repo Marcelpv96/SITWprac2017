@@ -204,7 +204,7 @@ class EventList(LoginRequiredMixin, ListView):
         return context
 
 
-class EventCreate(LoginRequiredMixin, ListView):
+class EventCreate(LoginRequiredMixin, CreateView):
     model = Event
     template_name = 'form.html'
     form_class = EventForm

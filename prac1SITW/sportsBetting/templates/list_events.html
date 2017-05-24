@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Events</h1>
+
+<div class="container text-center" style="margin-bottom:20px">
+    {% if user.username %}
+        <p>You don't find what you're looking for...</p>
+        <a href="{%  url 'create_event' %}"><button id="add_team" class="btn btn-primary">Add your team</button></a>
+    {% endif %}
+</div>
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <th class="text-center" colspan="1">
+            <h2>Name</h2>
+        </th>
+        <th class="text-center" colspan="1">
+            <h2>Local</h2>
+        </th>
+        <th class="text-center" colspan="1">
+
+        </th>
+        <th class="text-center" colspan="1">
+            <h2>Visitor</h2>
+        </th>
+        <th class="text-center" colspan="1">
+            <h2>Modify</h2>
+        </th>
+
+        <tbody>
+            {% for event in Events %}
+            <tr>
+                <td class="text-center" style="vertical-align: middle">
+                    <h3>{{ event.name }}</h3>
+                </td>
+                <td class=" text-center center-block" style="vertical-align: middle">
+                {% if event.team1.crest %}
+                    <img src="{{ event.team1.crest.url }}" width="100px" height="100px" >
+                {% else %}
+                    <img src="/media/crests/no_crest.svg" width="100px" height="100px" >
+                {% endif %}
+                </td>
+                <td class="text-center" style="vertical-align: middle">
+                    <h2>VS.</h2>
+                </td>
+                <td class=" text-center center-block" style="vertical-align: middle">
+                {% if event.team2.crest %}
+                    <img src="{{ event.team2.crest.url }}" width="100px" height="100px" >
+                {% else %}
+                    <img src="/media/crests/no_crest.svg" width="100px" height="100px" >
+                {% endif %}
+                </td>
+                <td class="text-center" style="vertical-align: middle">
+                    <div class="btn-group" >
+                    {% if event.user.username == user.username %}
+                        <a href="#"class="btn btn-success">Edit</a>
+                        <a href="#"class="btn btn-danger">Delete</a>
+                    {% else %}
+                        <button type="button" class="btn btn-success disabled">Edit</button>
+                        <button type="button" class="btn btn-danger disabled">Delete</button>
+                    {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+<ul class="pagination">
+    {% for current_page in Events.paginator.page_range %}
+        {% if current_page != Events.number %}
+            <li><a href="?page={{ current_page }}">{{ current_page }}</a></li>
+        {% else %}
+            <li class="active"><a href="#">{{ Events.number }}</a></li>
+        {% endif %}
+    {% endfor %}
+</ul>
+{% endblock %}
