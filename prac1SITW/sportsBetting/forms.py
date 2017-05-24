@@ -3,6 +3,7 @@ from .models import *
 
 
 class TeamForm(forms.ModelForm):
+    crest = forms.ImageField(required=False)
     class Meta:
         model = Team
         fields = ('name', 'short_name', 'crest', )
@@ -19,6 +20,7 @@ class TeamForm(forms.ModelForm):
 
 
 class CompetitionForm(forms.ModelForm):
+    logo = forms.ImageField(required=False)
     class Meta:
         model = Competition
         exclude = ('user', )
