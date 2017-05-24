@@ -24,6 +24,7 @@ class LoginRequiredMixin(object):
     def dispatch(self, *args, **kwargs):
         return super(LoginRequiredMixin, self).dispatch(*args, **kwargs)
 
+
 class CheckIsOwnerMixin(object):
     def get_object(self, *args, **kwargs):
         obj = super(CheckIsOwnerMixin, self).get_object(*args, **kwargs)
@@ -36,22 +37,28 @@ class CheckIsOwnerMixin(object):
             raise PermissionDenied
         return obj
 
+
 class LoginRequiredCheckIsOwnerUpdateView(LoginRequiredMixin, CheckIsOwnerMixin, UpdateView):
     template_name = 'form.html'
 
     def get_context_data(self, **kwargs):
-        context = super(LoginRequiredCheckIsOwnerUpdateView,self).get_context_data(**kwargs)
+        context = super(LoginRequiredCheckIsOwnerUpdateView,
+                        self).get_context_data(**kwargs)
         context['model'] = self.model.__name__
         return context
+
 
 class BetLoginRequiredCheckIsOwnerDeleteView(LoginRequiredMixin, CheckIsOwnerMixin, DeleteView):
     model = Bet
 
+
 class TeamLoginRequiredCheckIsOwnerDeleteView(LoginRequiredMixin, CheckIsOwnerMixin, DeleteView):
     model = Team
 
+
 class CompetitionLoginRequiredCheckIsOwnerDeleteView(LoginRequiredMixin, CheckIsOwnerMixin, DeleteView):
     model = Competition
+
 
 def homePage(request):
     template = get_template("homepage.html")
@@ -62,7 +69,7 @@ def homePage(request):
     return HttpResponse(page)
 
 
-############################### TEAMS VIEWS ############################################################
+############################### TEAMS VIEWS ##############################
 # Make a list of objects paginated
 def pagination(request, item_list, elems_per_page):
     paginator = Paginator(item_list, elems_per_page)
@@ -77,6 +84,7 @@ def pagination(request, item_list, elems_per_page):
 
     return objects
 
+
 class TeamCreate(LoginRequiredMixin, CreateView):
     model = Team
     template_name = 'form.html'
@@ -87,7 +95,8 @@ class TeamCreate(LoginRequiredMixin, CreateView):
 
         # If an objects already exists, delete the old one and override it
         if Team.objects.filter(name=form.instance.name, short_name=form.instance.short_name).exists():
-            Team.objects.filter(name=form.instance.name, short_name=form.instance.short_name).delete()
+            Team.objects.filter(name=form.instance.name,
+                                short_name=form.instance.short_name).delete()
 
         return super(TeamCreate, self).form_valid(form)
 
@@ -112,7 +121,8 @@ class TeamList(ListView):
         if query:
             if query.startswith('competition:'):
                 competition_name = query[len('competition:'):]
-                context['teams'] = Team.objects.filter(competition__name__exact=competition_name)
+                context['teams'] = Team.objects.filter(
+                    competition__name__exact=competition_name)
             else:
                 context['teams'] = Team.objects.filter(name__contains=query)
 
@@ -127,31 +137,37 @@ def list_team_events(request, id):
     # TODO: Api call
     team = Team.objects.get(id=id).short_name
     print id
-    #for event in events:
-    event = Event.objects.filter(Q(team1__id__exact=id) | Q(team2__id__exact=id))
+    # for event in events:
+    event = Event.objects.filter(
+        Q(team1__id__exact=id) | Q(team2__id__exact=id))
 
     return render(request, 'list_team_events.html', {'content': 'Api call de ' + team, 'events': event})
 
-################################### COMPETITION VIEWS ################################
+################################### COMPETITION VIEWS ####################
+
+
 class CompetitionList(ListView):
-        model = Competition
-        template_name = 'list_competitions.html'
+    model = Competition
+    template_name = 'list_competitions.html'
 
-        def get_context_data(self, **kwargs):
-            context = super(CompetitionList, self).get_context_data(**kwargs)
+    def get_context_data(self, **kwargs):
+        context = super(CompetitionList, self).get_context_data(**kwargs)
 
-            context['competitions'] = Competition.objects.all()
-            context['user'] = self.request.user
+        context['competitions'] = Competition.objects.all()
+        context['user'] = self.request.user
 
-            query = self.request.GET.get('search_box', default=None)
+        query = self.request.GET.get('search_box', default=None)
 
-            if query:
-                context['competitions'] = Competition.objects.filter(name__contains=query)
-                context['query'] = query
+        if query:
+            context['competitions'] = Competition.objects.filter(
+                name__contains=query)
+            context['query'] = query
 
-            context['competitions'] = pagination(self.request, context['competitions'], 10)
+        context['competitions'] = pagination(
+            self.request, context['competitions'], 10)
 
-            return context
+        return context
+
 
 class CompetitionCreate(LoginRequiredMixin, CreateView):
     model = Competition
@@ -163,23 +179,23 @@ class CompetitionCreate(LoginRequiredMixin, CreateView):
         context['model'] = 'Competition'
         return context
 
-
     def form_valid(self, form):
         form.instance.user = self.request.user
 
         # If an objects already exists, delete the old one and override it
         if Competition.objects.filter(name=form.instance.name, short_name=form.instance.short_name).exists():
-            Competition.objects.filter(name=form.instance.name, short_name=form.instance.short_name).delete()
+            Competition.objects.filter(
+                name=form.instance.name, short_name=form.instance.short_name).delete()
 
         return super(CompetitionCreate, self).form_valid(form)
 
 
-
-################################### EVENTS VIEWS #########################################
+################################### EVENTS VIEWS #########################
 
 class EventList(LoginRequiredMixin, ListView):
     model = Event
     template_name = "list_events.html"
+
     def get_context_data(self, **kwargs):
         context = super(EventList, self).get_context_data(**kwargs)
         context['Events'] = Event.objects.all()
@@ -187,14 +203,35 @@ class EventList(LoginRequiredMixin, ListView):
 
         return context
 
-################################### BETS VIEWS #########################################
+
+class EventCreate(LoginRequiredMixin, ListView):
+    model = Event
+    template_name = 'form.html'
+    form_class = EventForm
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        # If an objects already exists, delete the old one and override it
+        if Event.objects.filter(team1=form.instance.team1, team2=form.instance.team2).exists():
+            Event.objects.filter(team1=form.instance.team1,
+                                 team2=form.instance.team2).delete()
+        return super(EventCreate, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(EventCreate, self).get_context_data(**kwargs)
+        context['model'] = 'Events'
+        return context
+
+
+################################### BETS VIEWS ###########################
 # Implemented with simple security, later on I will upgrade this
 class BetsList(LoginRequiredMixin, ListView):
     model = Bet
 
     def get_context_data(self, **kwargs):
         context = super(BetsList, self).get_context_data(**kwargs)
-        context['bets'] = Bet.objects.filter(user__username__exact=self.request.user.username)
+        context['bets'] = Bet.objects.filter(
+            user__username__exact=self.request.user.username)
         return context
 
 
@@ -208,7 +245,8 @@ class BetCreate(LoginRequiredMixin, CreateView):
 
         # If an objects already exists, delete the old one and override it
         if Bet.objects.filter(event=form.instance.event, description=form.instance.description).exists():
-            Bet.objects.filter(event=form.instance.event, description=form.instance.description).delete()
+            Bet.objects.filter(event=form.instance.event,
+                               description=form.instance.description).delete()
 
         return super(BetCreate, self).form_valid(form)
 

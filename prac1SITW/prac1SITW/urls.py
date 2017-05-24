@@ -67,6 +67,7 @@ urlpatterns = [
     url(r'^events/list_events/',
         EventList.as_view(),
         name="list_events"),
+    url(r'^events/create/$', EventCreate.as_view(), name="create_event"),
 
     url(r'^events/(?P<id>[0-9]+)/$', list_team_events, name="list_team_events"),
 
