@@ -174,6 +174,19 @@ class CompetitionCreate(LoginRequiredMixin, CreateView):
         return super(CompetitionCreate, self).form_valid(form)
 
 
+
+################################### EVENTS VIEWS #########################################
+
+class EventList(LoginRequiredMixin, ListView):
+    model = Event
+    template_name = "list_events.html"
+    def get_context_data(self, **kwargs):
+        context = super(EventList, self).get_context_data(**kwargs)
+        context['Events'] = Event.objects.all()
+        context['Events'] = pagination(self.request, context['Events'], 10)
+
+        return context
+
 ################################### BETS VIEWS #########################################
 # Implemented with simple security, later on I will upgrade this
 class BetsList(LoginRequiredMixin, ListView):
