@@ -37,3 +37,37 @@ def step_impl(context):
 
         form.find_by_id('team_submit').first.click()
 
+
+@when('I want to edit the competition "{competition}"')
+def step_impl(context, competition):
+    from sportsBetting.models import Competition
+    id = Competition.objects.get(name=competition).id
+    context.browser.visit(context.get_url('/competitions/edit/' + str(id)))
+
+
+@when('I edit the competition')
+def step_impl(context):
+    form = context.browser.find_by_tag('form').first
+
+    for op in context.browser.find_by_tag('option'):
+        if op.checked:
+            op.click()
+
+    for row in context.table:
+        name = row['name']
+        short_name = row['short_name']
+        teams_name = row['teams'].split(',')
+
+        context.browser.fill('name', name)
+        context.browser.fill('short_name', short_name)
+        for n in teams_name:
+            context.browser.find_option_by_text(n).first.click()
+
+        form.find_by_id('team_submit').first.click()
+
+
+@when('I want to delete the competition "{competition}"')
+def step_impl(context, competition):
+    from sportsBetting.models import Competition
+    id = Competition.objects.get(name=competition).id
+    context.browser.visit(context.get_url('/competitions/delete/' + str(id)))

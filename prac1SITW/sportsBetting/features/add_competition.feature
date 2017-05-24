@@ -17,7 +17,6 @@ Feature: User adds new competitions
     And Exists a user "user2" with password "password"
 
 
-
   Scenario: Adding competition test and search for it
     Given I login as user "user1" with password "password"
     When I add a new competition
