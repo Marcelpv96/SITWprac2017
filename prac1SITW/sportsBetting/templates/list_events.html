@@ -6,7 +6,7 @@
 <div class="container text-center" style="margin-bottom:20px">
     {% if user.username %}
         <p>You don't find what you're looking for...</p>
-        <a href="{%  url 'create_event' %}"><button id="add_team" class="btn btn-primary">Add your team</button></a>
+        <a href="{%  url 'create_event' %}"><button class="btn btn-primary">Add new event</button></a>
     {% endif %}
 </div>
 <div class="table-responsive">
@@ -24,7 +24,7 @@
             <h2>Visitor</h2>
         </th>
         <th class="text-center" colspan="1">
-            <h2>Modify</h2>
+            <h2>Bet/Modify</h2>
         </th>
 
         <tbody>
@@ -52,6 +52,7 @@
                 </td>
                 <td class="text-center" style="vertical-align: middle">
                     <div class="btn-group" >
+                    <a href="{% url 'create_bet' event.id %}" class="btn btn-success">Create bet</a>
                     {% if event.user.username == user.username %}
                         <a href="{% url 'delete_event' event.id %}"class="btn btn-danger">Delete</a>
                     {% else %}

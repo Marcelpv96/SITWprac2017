@@ -244,6 +244,15 @@ class BetCreate(LoginRequiredMixin, CreateView):
 
         return super(BetCreate, self).form_valid(form)
 
+    def get_initial(self):
+        initial = super(BetCreate,self).get_initial()
+
+        if self.kwargs['event_id']:
+            initial['event'] = Event.objects.get(id=int(self.kwargs['event_id']))
+
+        initial['quota'] = 10.00
+        
+        return initial
     def get_context_data(self, **kwargs):
         context = super(BetCreate, self).get_context_data(**kwargs)
         context['model'] = 'Bet'

@@ -78,10 +78,10 @@ urlpatterns = [
     url(r'^bets/list_bets/',
         BetsList.as_view(template_name='list_bets.html'),
         name="list_bets"),
-    url(r'^bets/create/',
+    url(r'^bets/create/(?P<event_id>[0-9]*)$',
         BetCreate.as_view(),
         name="create_bet"),
-    url(r'^bets/edit/(?P<pk>[0-9]+)',
+    url(r'^bets/edit/(?P<pk>[0-9]+)$',
         LoginRequiredCheckIsOwnerUpdateView.as_view(
             form_class=BetForm,
             model=Bet,
