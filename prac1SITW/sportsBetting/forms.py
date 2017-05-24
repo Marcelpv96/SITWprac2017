@@ -1,12 +1,13 @@
 from django import forms
 from .models import *
 
+
 class TeamForm(forms.ModelForm):
     class Meta:
         model = Team
         fields = ('name', 'short_name', 'crest', )
         widgets = {
-            'name' : forms.TextInput(attrs={
+            'name': forms.TextInput(attrs={
                 'class': 'input-sm form-control',
                 'placeholder': 'Enter the complete name...'
             }),
@@ -16,12 +17,13 @@ class TeamForm(forms.ModelForm):
             }),
         }
 
+
 class CompetitionForm(forms.ModelForm):
     class Meta:
         model = Competition
         exclude = ('user', )
         widgets = {
-            'name' : forms.TextInput(attrs={
+            'name': forms.TextInput(attrs={
                 'class': 'input-sm form-control',
                 'placeholder': 'Enter the complete name...'
             }),
@@ -31,10 +33,21 @@ class CompetitionForm(forms.ModelForm):
             }),
             'teams': forms.SelectMultiple(attrs={
                 'class': 'form-control',
-                'size' : '10',
+                'size': '10',
             }),
         }
 
+
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        exclude = ('user', )
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'input-sm form-control',
+                'placeholder': 'Enter the complete name...'
+            }),
+        }
 
 
 class BetForm(forms.ModelForm):
@@ -42,7 +55,7 @@ class BetForm(forms.ModelForm):
         model = Bet
         fields = ('event', 'description', 'quota', )
         widgets = {
-            'description' : forms.TextInput(attrs={
+            'description': forms.TextInput(attrs={
                 'class': 'input-sm form-control',
                 'placeholder': 'Enter the bet description here...'
             }),

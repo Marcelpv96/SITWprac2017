@@ -64,7 +64,16 @@ urlpatterns = [
         ),
         name="delete_competition"),
     # Events patterns
-    url(r'^events/(?P<id>[0-9]+)/$', list_team_events, name="list_team_events"),
+    url(r'^events/list_events/(?P<pk>[0-9]*)$',
+        EventList.as_view(),
+        name="list_events"),
+    url(r'^events/create/$', EventCreate.as_view(), name="create_event"),
+    url(r'^events/delete/(?P<pk>[0-9]+)/$',
+        EventLoginRequiredCheckIsOwnerDeleteView.as_view(
+            context_object_name='event',
+            template_name='delete_event_confirm.html',
+            success_url=reverse_lazy('list_events')
+        ), name="delete_event"),
     # Bets patterns
     url(r'^bets/list_bets/',
         BetsList.as_view(template_name='list_bets.html'),

@@ -40,11 +40,16 @@ class Competition(models.Model):
 class Event(models.Model):
     name = models.CharField(null=False, max_length=100)
     sport = models.ForeignKey(Sport)
+    user = models.ForeignKey(User)
     team1 = models.ForeignKey(Team, null=True, related_name='local')
     team2 = models.ForeignKey(Team, null=True, related_name='visitor')
 
     def __unicode__(self):
         return self.name
+
+
+    def get_absolute_url(self):
+        return "/events/list_events"
 
 
 class Bet(models.Model):
