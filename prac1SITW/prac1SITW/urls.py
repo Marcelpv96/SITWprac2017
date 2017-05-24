@@ -64,7 +64,17 @@ urlpatterns = [
         ),
         name="delete_competition"),
     # Events patterns
+    url(r'^events/list_events/',
+        EventList.as_view(),
+        name="list_events"),
+
     url(r'^events/(?P<id>[0-9]+)/$', list_team_events, name="list_team_events"),
+
+
+
+
+
+
     # Bets patterns
     url(r'^bets/list_bets/',
         BetsList.as_view(template_name='list_bets.html'),
