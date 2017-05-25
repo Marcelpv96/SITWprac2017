@@ -15,7 +15,6 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import reverse_lazy
-from django.views.generic import UpdateView, DeleteView
 
 from django.views.static import serve
 from django.conf import settings
@@ -43,7 +42,7 @@ urlpatterns = [
             context_object_name="team",
             success_url=reverse_lazy('list_teams')
         ), name="delete_team"),
-    #Competition patterns
+    # Competition patterns
     url(r'^competitions/list_competitions/',
         CompetitionList.as_view(),
         name="list_competitions"),
@@ -72,7 +71,7 @@ urlpatterns = [
         EventLoginRequiredCheckIsOwnerDeleteView.as_view(
             context_object_name='event',
             template_name='delete_event_confirm.html',
-            success_url=reverse_lazy('list_events')
+            success_url='/events/list_events'
         ), name="delete_event"),
     # Bets patterns
     url(r'^bets/list_bets/',

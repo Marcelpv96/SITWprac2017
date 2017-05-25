@@ -10,7 +10,6 @@ def step_impl(context):
 
 @then('I\'m viewing a bet list containing')
 def step_impl(context):
-    # TODO: Change the way to find bets name
     bets = context.browser.find_by_tag('h3')
     for i, row in enumerate(context.table):
         assert row['name'] == bets[i].text
@@ -24,5 +23,7 @@ def step_impl(context, quota):
 
 @then('I find a bet with description "{description}"')
 def step_impl(context, description):
+    from sportsBetting.models import Bet
+    u = [x.description for x in Bet.objects.all()]
     descriptions = [x.text for x in context.browser.find_by_tag('p')]
     assert description in descriptions

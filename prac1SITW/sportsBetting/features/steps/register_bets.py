@@ -21,13 +21,13 @@ def step_impl(context, username):
             b.save()
 
 
-@when('I add a bet')
-def step_impl(context):
+@when('I add a bet on "{event_name}"')
+def step_impl(context, event_name):
     for row in context.table:
-        context.browser.visit(context.get_url('/bets/create'))
-        if context.browser.url == context.get_url('/bets/create'):
-            form = context.browser.find_by_tag('form')
+        context.browser.visit(context.get_url('/bets/create/'))
+        if context.browser.url == context.get_url('/bets/create/'):
+            form = context.browser.find_by_tag('form').first
+            context.browser.find_option_by_text(event_name).first.click()
             context.browser.fill('quota', row['quota'])
             context.browser.fill('description', row['description'])
-            context.browser.find_option_by_text(row['event']).first.click()
-            form.find_by_id('team-submit').first.click()
+            form.find_by_id('team_submit').first.click()
