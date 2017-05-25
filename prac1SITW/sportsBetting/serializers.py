@@ -5,7 +5,11 @@ from rest_framework.serializers import HyperlinkedModelSerializer
 from models import *
 
 class TeamSerializer (HyperlinkedModelSerializer):
-    pass
+    created_by = CharField(read_only=True)
+    class Meta:
+        model = Team
+        fields = ('name', 'short_name', 'crest', 'created_by', )
+
 
 class CompetitionSerializer (HyperlinkedModelSerializer):
 

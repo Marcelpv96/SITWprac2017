@@ -270,3 +270,17 @@ class APICompetitionList(generics.ListCreateAPIView):
     model = Competition
     queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer
+
+class APITeamList(generics.ListCreateAPIView):
+    model = Team
+    queryset = Team.objects.all()
+    serializer_class = TeamSerializer
+
+
+
+
+
+
+
+
+
