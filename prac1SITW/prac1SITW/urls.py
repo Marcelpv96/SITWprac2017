@@ -101,6 +101,8 @@ urlpatterns += [
         APITeamList.as_view(), name='teams-list'),
      url(r'^api/events/$',
         APIEventList.as_view(), name='events-list'),
+     url(r'^api/bets/$',
+        APIBetList.as_view(), name='bets-list'),
 ]
 
 #curl -H 'Accept: application/json' -u admin:1234 http://127.0.0.1:8000/api/events/

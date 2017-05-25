@@ -24,14 +24,20 @@ class CompetitionSerializer (HyperlinkedModelSerializer):
 
 
 class EventSerializer (HyperlinkedModelSerializer):
-    #created_by = CharField(read_only=True)
     user = CharField(read_only=True)
+    sport = CharField(read_only=True)
+    team1 = CharField(read_only=True)
+    team2 = CharField(read_only=True)
     class Meta:
         model = Event
         fields = ('name', 'sport', 'user', 'team1','team2', )
 
 
 class BetSerializer (HyperlinkedModelSerializer):
-    pass
+    user = CharField(read_only=True)
+    event = CharField(read_only=True)
+    class Meta:
+        model = Bet
+        fields = ('quota', 'description', 'user', 'event', )
 
 

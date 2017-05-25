@@ -281,6 +281,11 @@ class APIEventList(generics.ListCreateAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
 
+class APIBetList(generics.ListCreateAPIView):
+    model = Bet
+    queryset = Bet.objects.all()
+    serializer_class = BetSerializer
+
 
 
 
