@@ -276,7 +276,10 @@ class APITeamList(generics.ListCreateAPIView):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
 
-
+class APIEventList(generics.ListCreateAPIView):
+    model = Event
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
 
 
 

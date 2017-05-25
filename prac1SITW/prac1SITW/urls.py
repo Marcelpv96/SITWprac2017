@@ -98,10 +98,12 @@ urlpatterns += [
      url(r'^api/competitions/$',
         APICompetitionList.as_view(), name='competition-list'),
      url(r'^api/teams/$',
-        APITeamList.as_view(), name='teams-list'),	
+        APITeamList.as_view(), name='teams-list'),
+     url(r'^api/events/$',
+        APIEventList.as_view(), name='events-list'),
 ]
 
-#curl -H 'Accept: application/json' -u admin:1234 http://127.0.0.1:8000/api/teams/
+#curl -H 'Accept: application/json' -u admin:1234 http://127.0.0.1:8000/api/events/
 
 urlpatterns = format_suffix_patterns(urlpatterns, allowed=['api', 'json', 'xml'])
 if settings.DEBUG:
