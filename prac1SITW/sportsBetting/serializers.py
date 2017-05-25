@@ -8,7 +8,16 @@ class TeamSerializer (HyperlinkedModelSerializer):
     pass
 
 class CompetitionSerializer (HyperlinkedModelSerializer):
-    pass
+
+    """
+    Team_set = HyperlinkedRelatedField(many=True, read_only=True,
+            view_name='Competition:Teams-detail')
+    """
+    user = CharField(read_only=True)
+    class Meta:
+        model = Competition
+        fields = ('name', 'short_name', 'logo', 'user', )
+
 
 class EventSerializer (HyperlinkedModelSerializer):
     pass

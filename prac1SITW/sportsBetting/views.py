@@ -14,6 +14,11 @@ from Betfair.BetfairClient import getEventsforTeam
 from models import *
 from forms import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from serializers import *
+from rest_framework import generics
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
 # Create your views here.
 
 
@@ -257,3 +262,11 @@ class BetCreate(LoginRequiredMixin, CreateView):
         context = super(BetCreate, self).get_context_data(**kwargs)
         context['model'] = 'Bet'
         return context
+
+
+########################### API REST #########################
+
+class APICompetitionList(generics.ListCreateAPIView):
+    model = Competition
+    queryset = Competition.objects.all()
+    serializer_class = CompetitionSerializer

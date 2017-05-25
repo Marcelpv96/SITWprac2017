@@ -20,7 +20,7 @@ from django.views.static import serve
 from django.conf import settings
 
 from sportsBetting.views import *
-
+from rest_framework.urlpatterns import format_suffix_patterns
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', homePage, name='home'),
@@ -94,7 +94,14 @@ urlpatterns = [
         ),
     name="delete_bet"),
 ]
+urlpatterns += [
+     url(r'^api/competitions/$',
+        APICompetitionList.as_view(), name='competition-list'),
+]
 
+#curl -H 'Accept: application/json' -u admin:1234 http://127.0.0.1:8000/api/competitions/
+
+urlpatterns = format_suffix_patterns(urlpatterns, allowed=['api', 'json', 'xml'])
 if settings.DEBUG:
     urlpatterns += [
         url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT})
