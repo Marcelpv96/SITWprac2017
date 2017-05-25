@@ -6,7 +6,7 @@ use_step_matcher('parse')
 
 @given('Exist a event created by "{username}"')
 def step_impl(context, username):
-    from sportsBetting.models import Event, Team, Sport
+    from sportsBetting.models import Event, Team
     from django.contrib.auth.models import User
 
     for row in context.table:
@@ -17,26 +17,17 @@ def step_impl(context, username):
             e.user = User.objects.get(username=username)
             e.team1 = Team.objects.get(name=row['local'])
             e.team2 = Team.objects.get(name=row['visitor'])
-            s = Sport(name='Football')
-            if not Sport.objects.filter(name=s.name):
-                s.save()
-            e.sport = Sport.objects.get(name='Football')
             e.save()
 
 
 @when('I add a new event')
 def step_impl(context):
-    from sportsBetting.models import Sport
-    s = Sport(name='Football')
-    if not Sport.objects.filter(name=s.name):
-        s.save()
     for row in context.table:
         context.browser.visit(context.get_url('/events/create/'))
         if context.browser.url == context.get_url('/events/create/'):
             form = context.browser.find_by_tag('form').first
             context.browser.fill('name', row['local'] + ' v ' + row['visitor'])
 
-            context.browser.find_option_by_text('Football').first.click()
             context.browser.find_by_xpath(
                 '//select[@id="id_team1"]//option[text()="' + row['local'] + '"]', ).first.click()
             context.browser.find_by_xpath(

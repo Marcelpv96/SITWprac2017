@@ -67,7 +67,7 @@ class EventLoginRequiredCheckIsOwnerDeleteView(LoginRequiredMixin, CheckIsOwnerM
 
 def homePage(request):
     template = get_template("homepage.html")
-    var = Context({"content": "Estàs a sports betiitng.",
+    var = Context({"content": "Estàs a sports betting.",
                    'user': request.user})
 
     page = template.render(var)

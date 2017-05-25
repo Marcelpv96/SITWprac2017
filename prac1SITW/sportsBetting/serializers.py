@@ -1,4 +1,3 @@
-from django.db.models import Q
 from rest_framework.fields import CharField
 from rest_framework.relations import HyperlinkedRelatedField, HyperlinkedIdentityField
 from rest_framework.serializers import HyperlinkedModelSerializer
@@ -31,22 +30,21 @@ class CompetitionSerializer (HyperlinkedModelSerializer):
 class EventSerializer (HyperlinkedModelSerializer):
     uri = HyperlinkedIdentityField(view_name='event-detail')
     user = CharField(read_only=True)
-    sport = CharField(read_only=True)
     team1 = TeamSerializer()
     team2 = TeamSerializer()
 
     class Meta:
         model = Event
-        fields = ('uri', 'name', 'sport', 'user', 'team1', 'team2',)
+        fields = ('uri', 'name', 'user', 'team1', 'team2',)
 
 
 class BetSerializer (HyperlinkedModelSerializer):
     uri = HyperlinkedIdentityField(view_name='bet-detail')
     user = CharField(read_only=True)
-    event = EventSerializer(source='event')
+    event = EventSerializer()
 
     class Meta:
         model = Bet
-        fields = ('uri', 'quota', 'description', 'user', 'event', 'event_name', )
+        fields = ('uri', 'quota', 'description', 'user', 'event', )
 
 
