@@ -95,14 +95,18 @@ urlpatterns = [
     name="delete_bet"),
 ]
 urlpatterns += [
-     url(r'^api/competitions/$',
+    url(r'^api/competitions/$',
         APICompetitionList.as_view(), name='competition-list'),
-     url(r'^api/teams/$',
+    url(r'^api/teams/$',
         APITeamList.as_view(), name='teams-list'),
-     url(r'^api/events/$',
+    url(r'^api/events/$',
         APIEventList.as_view(), name='events-list'),
-     url(r'^api/bets/$',
+    url(r'^api/bets/$',
         APIBetList.as_view(), name='bets-list'),
+    url(r'^api/competitions/(?P<pk>\d+)$',
+        APICompetitionDetail.as_view(), name='competition-detail'),
+    url(r'^api/teams/(?P<pk>\d+)$',
+        APICompetitionDetail.as_view(), name='team-detail'),
 ]
 
 #curl -H 'Accept: application/json' -u admin:1234 http://127.0.0.1:8000/api/events/
