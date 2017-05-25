@@ -34,7 +34,7 @@ class EventSerializer (HyperlinkedModelSerializer):
 
 
 class BetSerializer (HyperlinkedModelSerializer):
-    user = CharField(read_only=True)
+    user = CharField(read_only=True )
     event = CharField(read_only=True)
     class Meta:
         model = Bet
