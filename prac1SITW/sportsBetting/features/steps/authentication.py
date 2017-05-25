@@ -23,7 +23,7 @@ def step_impl(context, username, password):
 @given('I\'m not logged in')
 def step_impl(context):
     context.browser.visit(context.get_url('logout')+'?next=/')
-    assert context.browser.is_text_present('login')
+    assert context.browser.is_text_present('Login')
 
 
 @then('Server responds with page containing "{message}"')
