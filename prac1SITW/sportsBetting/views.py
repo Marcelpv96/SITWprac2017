@@ -4,21 +4,18 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.template.loader import get_template
 from django.template import Context
-from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from rest_framework.response import Response
 
-from Betfair.BetfairClient import getEventsforTeam
-
-from models import *
 from forms import *
+
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 from serializers import *
 from rest_framework import generics
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework.reverse import reverse
+
 # Create your views here.
 
 
@@ -272,7 +269,19 @@ class APICompetitionList(generics.ListCreateAPIView):
     serializer_class = CompetitionSerializer
 
 
+class APICompetitionDetail(generics.RetrieveUpdateDestroyAPIView):
+    model = Competition
+    queryset = Competition.objects.all()
+    serializer_class = CompetitionSerializer
+
+
 class APITeamList(generics.ListCreateAPIView):
+    model = Team
+    queryset = Team.objects.all()
+    serializer_class = TeamSerializer
+
+
+class APITeamDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Team
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
@@ -284,22 +293,30 @@ class APIEventList(generics.ListCreateAPIView):
     serializer_class = EventSerializer
 
 
+class APIEventDetail(generics.RetrieveUpdateDestroyAPIView):
+    model = Event
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+
+
 class APIBetList(generics.ListCreateAPIView):
     model = Bet
     queryset = Bet.objects.all()
     serializer_class = BetSerializer
 
+    def list(self, request, *args, **kwargs):
+        queryset = Bet.objects.filter(user__username__exact=request.user.username)
+        serializer = BetSerializer(queryset, many=True, context={'request': request})
+        return Response(serializer.data)
 
-class APICompetitionDetail(generics.RetrieveUpdateDestroyAPIView):
-    model = Competition
-    queryset = Competition.objects.all()
-    serializer_class = CompetitionSerializer
+
+class APIBetDetail(generics.RetrieveUpdateDestroyAPIView):
+    model = Bet
+    queryset = Bet.objects.all()
+    serializer_class = BetSerializer
 
 
-class APITeamDetail(generics.RetrieveUpdateDestroyAPIView):
-    model = Team
-    queryset = Team.objects.all()
-    serializer_class = TeamSerializer
+
 
 
 

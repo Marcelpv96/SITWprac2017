@@ -94,24 +94,31 @@ urlpatterns = [
         ),
     name="delete_bet"),
 ]
+
+# API Rest urls
 urlpatterns += [
     url(r'^api/competitions/$',
         APICompetitionList.as_view(), name='competition-list'),
     url(r'^api/teams/$',
         APITeamList.as_view(), name='teams-list'),
     url(r'^api/events/$',
-        APIEventList.as_view(), name='events-list'),
+        login_required(APIEventList.as_view()), name='events-list'),
     url(r'^api/bets/$',
-        APIBetList.as_view(), name='bets-list'),
+        login_required(APIBetList.as_view()), name='bets-list'),
     url(r'^api/competitions/(?P<pk>\d+)$',
         APICompetitionDetail.as_view(), name='competition-detail'),
     url(r'^api/teams/(?P<pk>\d+)$',
-        APICompetitionDetail.as_view(), name='team-detail'),
+        APITeamDetail.as_view(), name='team-detail'),
+    url(r'^api/events/(?P<pk>\d+)$',
+        APIEventDetail.as_view(), name='event-detail'),
+    url(r'^api/bets/(?P<pk>\d+)$',
+        login_required(APIBetDetail.as_view()), name='bet-detail'),
 ]
 
-#curl -H 'Accept: application/json' -u admin:1234 http://127.0.0.1:8000/api/events/
 
 urlpatterns = format_suffix_patterns(urlpatterns, allowed=['api', 'json', 'xml'])
+
+
 if settings.DEBUG:
     urlpatterns += [
         url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT})

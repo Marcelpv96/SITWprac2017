@@ -1,5 +1,6 @@
+from django.db.models import Q
 from rest_framework.fields import CharField
-from rest_framework.relations import HyperlinkedRelatedField, HyperlinkedIdentityField, PrimaryKeyRelatedField
+from rest_framework.relations import HyperlinkedRelatedField, HyperlinkedIdentityField
 from rest_framework.serializers import HyperlinkedModelSerializer
 
 from models import *
@@ -7,38 +8,45 @@ from models import *
 
 class TeamSerializer (HyperlinkedModelSerializer):
     created_by = CharField(read_only=True)
+    uri = HyperlinkedIdentityField(view_name='team-detail')
+    competitions = HyperlinkedRelatedField(many=True, read_only=True, view_name='competition-detail', source='competition_set')
+    local_events = HyperlinkedRelatedField(many=True, read_only=True, view_name='event-detail', source='local')
+    visitor_events = HyperlinkedRelatedField(many=True, read_only=True, view_name='event-detail', source='visitor')
 
     class Meta:
         model = Team
-        fields = ('name', 'short_name', 'crest', 'created_by', )
+        fields = ('uri', 'name', 'short_name', 'crest', 'created_by', 'local_events', 'visitor_events', 'competitions')
 
 
 class CompetitionSerializer (HyperlinkedModelSerializer):
-    team_set = PrimaryKeyRelatedField(many=True, read_only=False, queryset=Team.objects.all(), source='teams')
+    uri = HyperlinkedIdentityField(view_name='competition-detail')
+    team_set = TeamSerializer(many=True, source='teams')
     user = CharField(read_only=True)
 
     class Meta:
         model = Competition
-        fields = ('name', 'short_name', 'logo', 'user', 'team_set')
+        fields = ('uri', 'name', 'short_name', 'logo', 'user', 'team_set', )
 
 
 class EventSerializer (HyperlinkedModelSerializer):
+    uri = HyperlinkedIdentityField(view_name='event-detail')
     user = CharField(read_only=True)
     sport = CharField(read_only=True)
-    team1 = CharField(read_only=True)
-    team2 = CharField(read_only=True)
+    team1 = TeamSerializer()
+    team2 = TeamSerializer()
 
     class Meta:
         model = Event
-        fields = ('name', 'sport', 'user', 'team1', 'team2', )
+        fields = ('uri', 'name', 'sport', 'user', 'team1', 'team2',)
 
 
 class BetSerializer (HyperlinkedModelSerializer):
+    uri = HyperlinkedIdentityField(view_name='bet-detail')
     user = CharField(read_only=True)
-    event = CharField(read_only=True)
+    event = EventSerializer(source='event')
 
     class Meta:
         model = Bet
-        fields = ('quota', 'description', 'user', 'event', )
+        fields = ('uri', 'quota', 'description', 'user', 'event', 'event_name', )
 
 
