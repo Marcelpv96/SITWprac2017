@@ -8,18 +8,19 @@ import datetime
 
 
 def generate_header(username, password, api_key):
-	ssoid = login(api_key, username, password)
-    	header = {'X-Application': api_key,
-              	'X-Authentication': ssoid,
-              	'content-type': 'application/json',
-              	'accept': 'application/json'
+    ssoid = login(api_key, username, password)
+    header = {'X-Application': api_key,
+              'X-Authentication': ssoid,
+              'content-type': 'application/json',
+              'accept': 'application/json'
               }
-	return header
+    return header
 
 
 def callAping(url, request):
     try:
-        req = urllib2.Request(url, request, generate_header("guillem.orellana@gmail.com", "go147258369", "FHjLyss3VQbZfiMU"))
+        req = urllib2.Request(url, request,
+                              generate_header("guillem.orellana@gmail.com", "go147258369", "FHjLyss3VQbZfiMU"))
         response = urllib2.urlopen(req)
         jsonResponse = response.read()
         return json.loads(jsonResponse)
@@ -33,12 +34,12 @@ def callAping(url, request):
 
 
 def getMarketCatalouge(eventId):
-    if(eventId is not None):
+    if (eventId is not None):
         print 'Calling listMarketCatalouge Operation to get MarketID and selectionId'
         endPoint = 'https://api.betfair.com/exchange/betting/rest/v1.0/listMarketCatalogue/'
         now = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
-        market_catalouge_req = '{"filter":{"eventIds":["' + str(eventId) + '"], "marketCountries":["GB"],'\
-            '"marketStartTime":{"from":"' + now + '"}},"maxResults":"20" }'
+        market_catalouge_req = '{"filter":{"eventIds":["' + str(eventId) + '"], "marketCountries":["GB"],' \
+                                                                           '"marketStartTime":{"from":"' + now + '"}},"maxResults":"20" }'
         """
         print  market_catalouge_req
         """
@@ -73,14 +74,12 @@ def getMarketCatalouge(IDs):
         print getMarketCatalouge(ID)
 
 
-
 def getEventsforTeam(Team):
     eventList = getEventsList(Team)
     events = []
     for event in eventList:
         events.append({'ID': event['event']['id'],
                        'Team1': event['event']['name'].split(' v ')[0],
-                       'Team2' :event['event']['name'].split(' v ')[1],
-                       'Esport':'Futbol'})
+                       'Team2': event['event']['name'].split(' v ')[1],
+                       'Esport': 'Futbol'})
     return events
-
