@@ -101,6 +101,7 @@ REST_FRAMEWORK = {
  'rest_framework.parsers.FormParser',
  'rest_framework.parsers.MultiPartParser'
  ),
+ 'UNAUTHENTICATED_USER': None,
  'DEFAULT_RENDERER_CLASSES': (
  'rest_framework.renderers.BrowsableAPIRenderer',
  'rest_framework.renderers.JSONRenderer',
