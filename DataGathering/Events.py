@@ -1,26 +1,29 @@
-from Betfair.BetfairClient import getEventsforTeam
-from DataGathering import utilities
+from ClientFootballData import ClientFootballData
+from utilities import *
 
-utilities.setup_django()
+setup_django()
 
-from sportsBetting.models import Event, Sport
-from sportsBetting.models import Team
+from sportsBetting.models import Team, Event
+from django.contrib.auth.models import User
 
-
-def save_event(event):
-
-    if not Event.objects().get(api_id=event["ID"]):
-        # Add event
-        team = Team.objects.get(id=id).short_name
-        event = getEventsforTeam(team)
-
-        #for event in events:
-        new_Event = Event()
-        new_Event.api_id = int(event['ID'])
-        new_Event.name = event['Team1'] + ' v ' + event['Team2']
-        new_Event.team1 = Team.objects.get(short_name=event['Team1'])
-        new_Event.team2 = Team.objects.get(short_name=event['Team2'])
-        new_Event.sport = Sport.objects.get(id=1)
-        new_Event.save()
+COMPETITIONS = ["PL",   # Premier League
+                "BL1",  # BundesLiga
+                "SA",   # Serie A
+                "PD",   # Primera Division
+                "FL1",  # Ligue 1
+                "DED",  # Eredivise
+                ]
 
 
+def save_events():
+    Event.objects.all().delete()
+    for c in COMPETITIONS:
+        for event in ClientFootballData.events(c):
+            local = Team.objects.get(name=event["homeTeamName"])
+            visitor = Team.objects.get(name=event["awayTeamName"])
+            e = Event()
+            e.name = local.short_name + ' v ' + visitor.short_name
+            e.team1 = local
+            e.team2 = visitor
+            e.user = User.objects.get(username='admin')
+            e.save()

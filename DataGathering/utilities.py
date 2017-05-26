@@ -30,4 +30,3 @@ def save_image_from_url(field, url):
         return True
 
     return False
-

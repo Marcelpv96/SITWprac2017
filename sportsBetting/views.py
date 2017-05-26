@@ -253,7 +253,7 @@ class BetCreate(LoginRequiredMixin, CreateView):
             initial['event'] = Event.objects.get(id=int(self.kwargs['event_id']))
 
         initial['quota'] = 10.00
-        
+
         return initial
     def get_context_data(self, **kwargs):
         context = super(BetCreate, self).get_context_data(**kwargs)
@@ -268,6 +268,16 @@ class APICompetitionList(generics.ListCreateAPIView):
     queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer
 
+    def list(self, request, *args, **kwargs):
+        if request.GET.get('q'):
+            queryset = Competition.objects.filter(name__startswith=request.GET.get('q'))
+        else:
+            queryset = Competition.objects.all()
+
+        serializer = CompetitionSerializer(queryset, many=True, context={'request': request})
+
+        return Response(serializer.data)
+
 
 class APICompetitionDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Competition
@@ -279,6 +289,16 @@ class APITeamList(generics.ListCreateAPIView):
     model = Team
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
+
+    def list(self, request, *args, **kwargs):
+        if request.GET.get('q'):
+            queryset = Team.objects.filter(name__startswith=request.GET.get('q'))
+        else:
+            queryset = Team.objects.all()
+
+        serializer = TeamSerializer(queryset, many=True, context={'request': request})
+
+        return Response(serializer.data)
 
 
 class APITeamDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -314,12 +334,3 @@ class APIBetDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Bet
     queryset = Bet.objects.all()
     serializer_class = BetSerializer
-
-
-
-
-
-
-
-
-

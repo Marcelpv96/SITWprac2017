@@ -9,6 +9,12 @@ L' Aplicació permet:
 * Crear/editar events formats per 2 equips.
 * Crear/editar/eliminar apostes sobre un event.
 
+## Final models
+
+![Models](models.png)
+
+Mirar models.png
+
 ### Prerequisites
 
 ```
@@ -39,6 +45,15 @@ Comanda per executar els testos behave.
 ```
 python manage.py test sportsBetting
 ```
+
+## API
+
+S'ha utilitzat l'api de [football-data](http://www.football-data.org/)
+
+## Admin User
+
+Username: admin
+Password: 1234
 
 ## Authors
 

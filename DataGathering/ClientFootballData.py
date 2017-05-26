@@ -8,6 +8,7 @@ class ClientFootballData(object):
     SERVICES = {
         'competitions': 'competitions/',
         'team': 'teams/',
+        'events': 'fixtures/'
     }
 
     @staticmethod
@@ -41,4 +42,8 @@ class ClientFootballData(object):
                                            ClientFootballData.SERVICES['team'] + \
                                            str(team_id))
 
-
+    @staticmethod
+    def events(competition):
+        return ClientFootballData.api_call(ClientFootballData.BASE_URL + \
+                                           ClientFootballData.SERVICES['events'] + \
+                                           "?league=" + competition)["fixtures"]
