@@ -50,6 +50,12 @@ python manage.py test sportsBetting
 
 S'ha utilitzat l'api de [football-data](http://www.football-data.org/)
 
+### Afegir dades
+
+```
+python DataGathering/data_adder.py
+```
+
 ## Admin User
 
 Username: admin
