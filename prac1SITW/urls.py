@@ -94,6 +94,9 @@ urlpatterns = [
             success_url=reverse_lazy('list_bets')
         ),
     name="delete_bet"),
+    url(r'^teams/(?P<pk>\d+)/reviews/create/$',
+            review,
+    name='review_create'),
 ]
 
 # API Rest urls

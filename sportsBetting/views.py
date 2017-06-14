@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.template.loader import get_template
 from django.template import Context
 from django.db.models import Q
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView
 from rest_framework.response import Response
@@ -65,6 +67,7 @@ class CompetitionLoginRequiredCheckIsOwnerDeleteView(LoginRequiredMixin, CheckIs
 class EventLoginRequiredCheckIsOwnerDeleteView(LoginRequiredMixin, CheckIsOwnerMixin, DeleteView):
     model = Event
 
+
 def homePage(request):
     template = get_template("homepage.html")
     var = Context({"content": "Estàs a sports betting.",
@@ -117,6 +120,10 @@ class TeamDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(TeamDetail, self).get_context_data(**kwargs)
+        context['RATING_CHOICES'] = TeamReview.RATING_CHOICES
+        team = Team.objects.get(id=self.kwargs['pk'])
+        context['reviews'] = TeamReview.objects.filter(team=team)
+        print context['reviews'].values()
         return context
 
 
@@ -145,6 +152,21 @@ class TeamList(ListView):
         context['teams'] = pagination(self.request, context['teams'], 10)
 
         return context
+
+@login_required()
+def review(request, pk):
+    team = get_object_or_404(Team, pk=pk)
+    if TeamReview.objects.filter(team=team, user=request.user).exists():
+        TeamReview.objects.get(team=team, user=request.user).delete()
+    new_review = TeamReview(
+        rating=request.POST['rating'],
+        comment=request.POST['comment'],
+        user=request.user,
+        team=team)
+
+    new_review.save()
+
+    return HttpResponseRedirect('/teams/' + str(team.id))
 
 
 ################################### COMPETITION VIEWS ####################
@@ -264,6 +286,7 @@ class BetCreate(LoginRequiredMixin, CreateView):
         initial['quota'] = 10.00
 
         return initial
+
     def get_context_data(self, **kwargs):
         context = super(BetCreate, self).get_context_data(**kwargs)
         context['model'] = 'Bet'

@@ -1,15 +1,19 @@
 {% extends 'base.html' %}
 
+<span vocab="http://schema.org/" typeof="SportsTeam">
+
 {% block content %}
-    <h1>{{ team.name }}</h1>
+    <h1><span property="legalName">{{ team.name }}</span></h1>
     <div class="container">
     <div class="row" style="margin-top: 30px">
         <div class="col-sm-4">
+            <span property="logo">
             {% if team.crest %}
                 <img src="{{ team.crest.url }}" width="200px" height="200px" >
             {% else %}
                 <img src="/media/crests/no_crest.svg" width="200px" height="200px" >
             {% endif %}
+            </span>
         </div>
         <div class="col-sm-4">
             <table class="table table-striped table-hover">
@@ -31,6 +35,45 @@
             </table>
         </div>
     </div>
+
+    <h2>Reviews</h2>
+    {% if reviews|length > 0 %}
+    <span rel="aggregateRating">
+        <p typeof="AggregateRating">
+            Average rating <span property="ratingValue">{{ team.averageRating|stringformat:".1f" }}</span>
+            {% with reviews|length as reviewCount %}
+            from <span property="reviewCount">{{ reviewCount }}</span> review{{ reviewCount|pluralize }}
+            {% endwith %}
+        </p>
+    </span>
+    <ul rel="review">
+        {% for review in reviews %}
+            <li typeof="Review">
+                <p rel="reviewRating" typeof="Rating">
+                    <span property="worstRating" content="{{ RATING_CHOICES.0.0 }}"></span>
+                    <span property="ratingValue">{{ review.rating }}</span> star{{ review.rating|pluralize }}
+                    {% with RATING_CHOICES|last as best %}
+                    <span property="bestRating" content="{{ best.0 }}"></span>
+                    {% endwith %}
+                </p>
+                <p property="description">{% if review.comment %}{{ review.comment }}{% endif %}</p>
+                <p>Created by <span property="author">{{ review.user }}</span></p>
+            </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <h3>Add Review</h3>
+    <form action="{% url 'review_create' team.id %}" method="post">
+        {% csrf_token %}
+        Message: <textarea name="comment" id="comment" rows="4"></textarea>
+        <p>Rating:</p>
+            {% for rate in RATING_CHOICES %}
+                    <input type="radio" name="rating" id="rating{{ forloop.counter }}" value="{{ rate.0 }}" />
+                    <label for="choice{{ forloop.counter }}">{{ rate.1 }} star{{ rate.0|pluralize }}</label>
+            {% endfor %}<br>
+        <input type="submit" value="Review" />
+    </form>
      <a style="margin-top: 30px" href="{% url 'list_teams' %}"class="btn btn-default">Back to teams list</a>
     </div>
 {% endblock %}

@@ -15,6 +15,14 @@ class Team(models.Model):
     def get_absolute_url(self):
         return "/teams/list_teams"
 
+    def averageRating(self):
+        reviewCount = self.teamreview_set.count()
+        if not reviewCount:
+            return 0
+        else:
+            ratingSum = sum([float(review.rating) for review in self.teamreview_set.all()])
+            return ratingSum / reviewCount
+
 
 class Competition(models.Model):
     name = models.CharField(null=False, max_length=100)
@@ -38,7 +46,6 @@ class Event(models.Model):
 
     def __unicode__(self):
         return self.name
-
 
     def get_absolute_url(self):
         return "/events/list_events"
