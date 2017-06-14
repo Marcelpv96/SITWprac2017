@@ -55,3 +55,18 @@ class Bet(models.Model):
 
     def get_absolute_url(self):
         return '/bets/list_bets'
+
+class Review(models.Model):
+    RATING_CHOICES	= ((1,	'one'),	(2,	'two'),	(3,	'three'),	(4,	'four'),	(5,	'five'))
+    rating	= models.PositiveSmallIntegerField('Rating	(stars)',	blank=False,	default=3,	choices=RATING_CHOICES)
+    comment	= models.TextField(blank=True,	null=True)
+    user	= models.ForeignKey(User,	default=1)
+
+    class Meta:
+        abstract = True
+
+class TeamReview(Review):
+    team = models.ForeignKey(Team)
+
+    class Meta:
+        unique_together	= ("team",	"user")
