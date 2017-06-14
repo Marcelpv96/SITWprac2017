@@ -46,6 +46,12 @@ Comanda per executar els testos behave.
 python manage.py test sportsBetting
 ```
 
+## RDFa + HTML5
+
+S'ha implementat una nova template team_detail per tal de poder indicar els atributs RDF schema d'un equip, a més,
+s'ha afegit un sistema de reviews als equips amb semàntica de RDF en la template anteriorment indicada.
+
+
 ## API
 
 S'ha utilitzat l'api de [football-data](http://www.football-data.org/)

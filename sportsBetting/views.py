@@ -120,10 +120,10 @@ class TeamDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(TeamDetail, self).get_context_data(**kwargs)
-        context['RATING_CHOICES'] = TeamReview.RATING_CHOICES
+        context['RATING_CHOICES'] = sorted(TeamReview.RATING_CHOICES, reverse=True)
         team = Team.objects.get(id=self.kwargs['pk'])
         context['reviews'] = TeamReview.objects.filter(team=team)
-        print context['reviews'].values()
+        context['events'] = Event.objects.filter(Q(team1__id=int(self.kwargs['pk'])) | Q(team2__id=int(self.kwargs['pk'])))
         return context
 
 
