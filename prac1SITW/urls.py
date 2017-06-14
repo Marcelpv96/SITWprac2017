@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^$', homePage, name='home'),
     url(r'^accounts/', include('accounts.urls')),
     # Team patterns
+    url(r'^teams/(?P<pk>[0-9]+)$', TeamDetail.as_view(), name='team_info'),
     url(r'^teams/list_teams/',
         TeamList.as_view(),
         name="list_teams"),

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{{ team.name }}</h1>
+    <div class="container">
+    <div class="row" style="margin-top: 30px">
+        <div class="col-sm-4">
+            {% if team.crest %}
+                <img src="{{ team.crest.url }}" width="200px" height="200px" >
+            {% else %}
+                <img src="/media/crests/no_crest.svg" width="200px" height="200px" >
+            {% endif %}
+        </div>
+        <div class="col-sm-4">
+            <table class="table table-striped table-hover">
+                <th colspan="2" class="text-center"><h3>Info</h3></th>
+                <tbody>
+                    <tr>
+                        <td><strong>Name</strong></td>
+                        <td>{{ team.name }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Short Name</strong></td>
+                        <td>{{ team.short_name }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Created by</strong></td>
+                        <td>{{ team.created_by }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+     <a style="margin-top: 30px" href="{% url 'list_teams' %}"class="btn btn-default">Back to teams list</a>
+    </div>
+{% endblock %}

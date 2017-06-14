@@ -6,7 +6,7 @@ from django.template.loader import get_template
 from django.template import Context
 from django.db.models import Q
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView
 from rest_framework.response import Response
 
 from forms import *
@@ -108,6 +108,15 @@ class TeamCreate(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super(TeamCreate, self).get_context_data(**kwargs)
         context['model'] = 'Team'
+        return context
+
+
+class TeamDetail(DetailView):
+    model = Team
+    template_name = 'team_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TeamDetail, self).get_context_data(**kwargs)
         return context
 
 

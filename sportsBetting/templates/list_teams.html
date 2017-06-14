@@ -63,13 +63,13 @@ $(function() {
                     <tr>
                         <td class="text-center" style="vertical-align: middle">
                             <a href="{% url 'list_events' team.id %}"><h3>{{ team.name }}</h3></a>
+                            <a href="{%  url 'team_info' team.id %}"><button id="add_team" class="btn btn-default">Info</button></a>
                         </td>
                         <td class=" text-center center-block" style="vertical-align: middle">
                         {% if team.crest %}
                                 <img src="{{ team.crest.url }}" width="100px" height="100px" >
                         {% else %}
                             <img src="/media/crests/no_crest.svg" width="100px" height="100px" >
-
                         {% endif %}
                         </td>
                         <td class="text-center" style="vertical-align: middle">
