@@ -13,12 +13,22 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import mimetypes
-
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 mimetypes.add_type("image/svg+xml", ".svg", True)
 mimetypes.add_type("image/svg+xml", ".svgz", True)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+STATIC_URL = '/static/'
+
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+    os.path.join(PROJECT_ROOT, 'static'),
+)
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -91,22 +101,22 @@ DATABASES = {
 # Rest framework
 
 REST_FRAMEWORK = {
- 'DEFAULT_PERMISSION_CLASSES':
-('rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',),
- 'PAGINATE_BY': 10,
- 'DEFAULT_PARSER_CLASSES': (
- 'rest_framework.parsers.FormParser',
- 'rest_framework.parsers.JSONParser',
- 'rest_framework_xml.parsers.XMLParser',
- 'rest_framework.parsers.FormParser',
- 'rest_framework.parsers.MultiPartParser'
- ),
- 'UNAUTHENTICATED_USER': None,
- 'DEFAULT_RENDERER_CLASSES': (
- 'rest_framework.renderers.BrowsableAPIRenderer',
- 'rest_framework.renderers.JSONRenderer',
- 'rest_framework_xml.renderers.XMLRenderer',
- ),
+    'DEFAULT_PERMISSION_CLASSES':
+    ('rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',),
+    'PAGINATE_BY': 10,
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.JSONParser',
+        'rest_framework_xml.parsers.XMLParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser'
+    ),
+    'UNAUTHENTICATED_USER': None,
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework_xml.renderers.XMLRenderer',
+    ),
 }
 
 
@@ -133,5 +143,5 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-#Behave tests
+# Behave tests
 TEST_RUNNER = 'django_behave.runner.DjangoBehaveOnlyTestSuiteRunner'
